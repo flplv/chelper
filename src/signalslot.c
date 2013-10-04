@@ -88,7 +88,7 @@ void slot_set(slot_t *cobj, slot_func function, slot_arg arg)
 	PTR_CHECK(obj, "slot");
 
 	if (!function) {
-		LOG_ERROR("slot", "bad slot function");
+		MSG_ERROR("bad slot function", "slot");
 		return;
 	}
 
@@ -111,12 +111,12 @@ static void slot_call(slot_t *cobj)
 	PTR_CHECK(obj, "slot");
 
 	if (!obj->set) {
-		LOG_ERROR("slot", "no slot function set");
+		MSG_ERROR("no slot function set", "slot");
 		return;
 	}
 
 	if (!obj->func) {
-		LOG_ERROR("slot", "bad slot function");
+		MSG_ERROR("bad slot function", "slot");
 		return;
 	}
 

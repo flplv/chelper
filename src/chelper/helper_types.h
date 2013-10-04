@@ -22,10 +22,10 @@
 typedef unsigned int size_t;
 #endif
 
-extern int (*fatal_terminal_output)(const char * str);
-
 #define BUFFER_PTR_RDOLY const uint8_t *
 #define BUFFER_PTR uint8_t *
+
+typedef uint32_t timeout_t;
 
 struct s_vector_private
 {

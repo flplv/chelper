@@ -6,14 +6,14 @@
 
 #define MEMORY_ALLOC_CHECK(__obj) \
 	if (!__obj) { \
-		global_my_log(ERROR, __FILE__, __LINE__, "Failed to alloc memory", "Malloc"); \
+		MSG_ERROR("Failed to alloc memory", "Malloc"); \
 		fatal("Locked"); \
  		while(1); \
 	}
 
 #define PTR_CHECK(__ptr, __module__) \
 	if (!__ptr) { \
-		global_my_log(ERROR, __FILE__, __LINE__, "Invalid Pointer", __module__); \
+		MSG_ERROR("Invalid Pointer", __module__); \
 		return; \
 	}
 
@@ -24,7 +24,7 @@
 
 #define PTR_CHECK_RETURN(__ptr, __module__, __ret__) \
 	if (!__ptr) { \
-		global_my_log(ERROR, __FILE__, __LINE__, "Invalid Pointer", __module__); \
+		MSG_ERROR("Invalid Pointer", __module__); \
 		return __ret__; \
 	}
 

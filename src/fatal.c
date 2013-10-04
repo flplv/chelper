@@ -9,10 +9,10 @@
 
 void fatal(const char * str)
 {
-	fatal_terminal_output("\nFatal error: ");
-	fatal_terminal_output(str);
+	sys_stdout("\nFatal error: ");
+	sys_stdout(str);
 #if !defined SYSTEM_UNIT_TEST
-	fatal_terminal_output("\Execution is halted.");
+	sys_stdout("\Execution is halted.");
 	while(1);
 #endif
 }

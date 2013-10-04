@@ -5,8 +5,6 @@ extern "C" {
 #include "chelper/signalslot2.h"
 }
 
-#include "mocks/terminal_intercepter.h"
-
 #include "CppUTest/TestHarness.h"
 #include "CppUTest/MemoryLeakDetector.h"
 
@@ -33,7 +31,7 @@ TEST_GROUP(signalslot)
 		slot_deinit(&slot);
 		signal2_deinit(&signal2);
 		slot2_deinit(&slot2);
-		DISABLE_INTERCEPTION;
+//		DISABLE_INTERCEPTION;
 	}
 
 	bool called;

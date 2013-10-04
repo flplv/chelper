@@ -8,6 +8,7 @@
 #include "chelper/helper_types.h"
 #include "chelper/vector.h"
 #include "chelper/checks.h"
+#include "chelper/log.h"
 #include <string.h>
 
 

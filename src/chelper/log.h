@@ -8,34 +8,41 @@
 #ifndef LOG_H_
 #define LOG_H_
 
+#include <stdio.h>
+#include <syslog.h>
 #include "helper_types.h"
 
-enum e_log_lvl {
-	ERROR,
+enum dbg_log_lvl {
+	INFO,
 	WARNING,
-	MESSAGE
+	CRITICAL
 };
 
-struct s_my_log_private
-{
-	const char *module_tag;
-	enum e_log_lvl default_my_log_level;
-	int (*stream_output)(const char *);
-};
-typedef uint8_t my_log_t[sizeof(struct s_my_log_private)];
+int sys_stdout(const char* format, ...);
+void set_sys_dbg_lvl(int level);
+int get_sys_dbg_lvl();
 
-void my_log_init(my_log_t * const obj, const char * title, enum e_log_lvl default_lvl);
-void my_log_deinit(my_log_t * const obj);
+#if defined(DEBUG)
+	#define MSG_INFO(a, b, ...)			\
+		do {				\
+			if (get_sys_dbg_lvl() == INFO) {			\
+				sys_stdout("\n%s:%d:info: "b":"a"\r\n", __FILE__, __LINE__, ##__VA_ARGS__);	\
+			}	\
+		} while(0)
+	#define MSG_WARNING(a, b, ...)		sys_stdout("\n%s:%d:warning: "b":"a"\r\n", __FILE__, __LINE__, ##__VA_ARGS__)
+	#define MSG_ERROR(a, b, ...)		sys_stdout("\n%s:%d:error: "b":"a"\r\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#else
+	#define MSG_INFO(a, b,...)			syslog(LOG_INFO, a, ##__VA_ARGS__)
+	#define MSG_WARNING(a, b, ...)		syslog(LOG_WARNING, a, ##__VA_ARGS__)
+	#define MSG_ERROR(a, b, ...)		syslog(LOG_ERR, a, ##__VA_ARGS__)
+#endif
 
-void my_log(enum e_log_lvl, const char *file, int line, const char *, my_log_t *);
-void my_log_continue(const char *, my_log_t *);
-void my_log_continue_new_line(const char *, my_log_t *);
-BOOL my_log_assert(BOOL test, enum e_log_lvl lvl, const char *file, int line, const char * text, my_log_t * const);
+#ifdef SYSTEM_UNIT_TEST
 
-void global_my_log(enum e_log_lvl lvl, const char *file, int line, const char * text, const char * owner);
-void global_my_log_continue(const char *);
+void sys_set_interception(BOOL enabled);
+char * sys_get_intercepted_message();
 
-#define LOG_ERROR(__owner, __text) global_my_log(ERROR, __FILE__, __LINE__, __text, __owner)
+#endif
 
 #endif /* LOG_H_ */
 

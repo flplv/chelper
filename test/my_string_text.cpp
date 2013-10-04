@@ -1,5 +1,3 @@
-#include "mocks/terminal_intercepter.h"
-
 #include "CppUTest/TestHarness.h"
 #include "CppUTest/MemoryLeakDetector.h"
 
