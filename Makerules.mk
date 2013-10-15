@@ -1,4 +1,4 @@
-#  This makefile build to Dev (host pc where you are sitting) or Tgt (embedded board).
+#  This makefile build to Dev (host pc where you are sitting).
 #  
 #  To build to Dev it must be straightforward. Although to build the tests for dev you will need
 #  the CppUTest framework compiled.
@@ -63,25 +63,4 @@ DEV_CFLAGS = \
 		
 DEV_LDFLAGS =
 DEV_LDLIBS =	
-
-### TEST TGT CFG ###
-
-TEST_TGT_CFLAGS = \
-		-I$(CPPUTEST_HOME)/include/ -Isrc -g \
-		-D AUTO_GEN_BUILD_TAG='"${BUILDTAG}"' \
-		-D AUTO_GEN_FIRWMARE_VERSION='"${FIRWMARE_VERSION}"' \
-		-D SYSTEM_UNIT_TEST 
-
-TEST_TGT_LDFLAGS =
-TEST_TGT_LDLIBS =				
-
-### TGT CFG ###
-				
-TGT_CFLAGS = \
-		-Isrc \
-		-D AUTO_GEN_BUILD_TAG='"${BUILDTAG}"' \
-		-D AUTO_GEN_FIRWMARE_VERSION='"${FIRWMARE_VERSION}"' \
-		
-TGT_LDFLAGS =
-TGT_LDLIBS =	
 	

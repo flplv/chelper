@@ -1,9 +1,3 @@
-/*
- * number.c
- *
- *  Created on: Jan 19, 2013
- *      Author: fanl
- */
 
 #include <stdint.h>
 #include <ctype.h>

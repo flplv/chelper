@@ -23,13 +23,13 @@ TEST_GROUP(my_string)
 
 TEST(my_string, instance)
 {
-	STRCMP_EQUAL("", my_string_get(&cut));
+	STRCMP_EQUAL("", my_string_data(&cut));
 	my_string_set(&cut, "tweedledee ");
-	STRCMP_EQUAL("tweedledee ", my_string_get(&cut));
+	STRCMP_EQUAL("tweedledee ", my_string_data(&cut));
 
 	my_string_set(&cut, "tweedledee tweedledee");
-	STRCMP_EQUAL("tweedledee tweedledee", my_string_get(&cut));
+	STRCMP_EQUAL("tweedledee tweedledee", my_string_data(&cut));
 
 	my_string_set(&cut, "tweedledee tweedledee tweedledee tweedledee tweedledee tweedledee tweedledee tweedledee");
-	STRCMP_EQUAL("tweedledee tweedledee tweedledee tweedledee tweedledee tweedledee tweedledee tweedledee", my_string_get(&cut));
+	STRCMP_EQUAL("tweedledee tweedledee tweedledee tweedledee tweedledee tweedledee tweedledee tweedledee", my_string_data(&cut));
 }

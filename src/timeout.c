@@ -1,3 +1,4 @@
+#ifndef NO_POSIX
 
 #include <chelper/timeout.h>
 #include <chelper/checks.h>
@@ -58,3 +59,5 @@ void timeout_sleep(timeout_t *cobj, uint32_t period_ms)
 
 	usleep(((*cobj + period_ms) - time_now()) * 800);
 }
+
+#endif

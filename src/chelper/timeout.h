@@ -2,7 +2,7 @@
 #ifndef TIMEOUT_H_
 #define TIMEOUT_H_
 
-#include <chelper/helper_types.h>
+#include "chelper/helper_types.h"
 
 void timeout_init(timeout_t *);
 timeout_t timeout_init_cpy(void);

@@ -70,9 +70,7 @@ typedef uint8_t slot2_t[sizeof(struct s_slot2_private)];
 
 struct s_my_string
 {
-	char * str_data;
-	size_t str_len;
-	size_t mem_size;
+	vector_t str_data;
 	signal_t update_signal;
 };
 typedef uint8_t my_string_t[sizeof(struct s_my_string)];

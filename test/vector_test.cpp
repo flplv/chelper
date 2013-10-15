@@ -68,3 +68,34 @@ TEST(vector, instance)
 	CHECK_EQUAL(2, icut->buffer_total_slots);
 }
 
+TEST(vector, addmany_remove)
+{
+	vector_t vec;
+	struct s_vector_private * ivec = ((struct s_vector_private *)vec);
+
+	vector_init(&vec, sizeof(char));
+
+	uint32_t str_size = strlen("abcdefghijklmnopqrstuvxywz") + 1;
+	vector_add_many(&vec, (BUFFER_PTR_RDOLY)"abcdefghijklmnopqrstuvxywz", str_size);
+
+	CHECK_EQUAL(str_size, ivec->used_slots);
+	STRCMP_EQUAL("abcdefghijklmnopqrstuvxywz", (const char *)vector_data(&vec));
+
+	vector_remove(&vec, 10); /* remove letter k */
+	STRCMP_EQUAL("abcdefghijlmnopqrstuvxywz", (const char *)vector_data(&vec));
+
+	vector_clear(&vec);
+	CHECK_EQUAL(0, ivec->used_slots);
+	CHECK_EQUAL((BUFFER_PTR)0, vector_at(&vec, 0));
+
+	vector_add_many(&vec, (BUFFER_PTR_RDOLY)"abcdefghijklmnopqrstuvxywz", str_size);
+
+	CHECK_EQUAL(str_size, ivec->used_slots);
+	STRCMP_EQUAL("abcdefghijklmnopqrstuvxywz", (const char *)vector_data(&vec));
+
+	vector_remove(&vec, 10); /* remove letter k */
+	STRCMP_EQUAL("abcdefghijlmnopqrstuvxywz", (const char *)vector_data(&vec));
+
+	vector_deinit(&vec);
+}
+
