@@ -9,6 +9,7 @@ Decompress CppUTest.zip to build the chelper tests.
 	Modules:
 		Vector 
 		Ring Fifo
+		Fast Ring Fifo
 		String 
 		Signal Slot with no argument
 		Signal Slot with two int arguments 
