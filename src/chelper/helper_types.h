@@ -29,12 +29,26 @@ typedef uint32_t timeout_t;
 
 struct s_vector_private
 {
-	uint32_t item_size;
+	size_t item_size;
 	uint32_t used_slots;
 	uint32_t buffer_total_slots;
-	uint8_t *buffer;
+	uint8_t * buffer;
 };
 typedef uint8_t vector_t[sizeof(struct s_vector_private)];
+
+struct s_ring_fifo_private
+{
+	uint8_t * client_buffer;
+	uint8_t * own_buffer;
+	uint8_t * buffer;
+	size_t buffer_size;
+	size_t element_size;
+	uint32_t num_fifo_slots;
+	BOOL full;
+	uint32_t rd;
+	uint32_t wr;
+};
+typedef uint8_t ring_fifo_t[sizeof(struct s_ring_fifo_private)];
 
 typedef void * slot_arg;
 typedef void(*slot_func)(slot_arg);

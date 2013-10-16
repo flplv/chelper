@@ -1,8 +1,8 @@
 #ifndef MY_STRING_H_
 #define MY_STRING_H_
 
-#include "helper_types.h"
-#include "signalslot.h"
+#include <chelper/helper_types.h>
+#include <chelper/signalslot.h>
 
 void my_string_init(my_string_t *);
 void my_string_deinit(my_string_t *);

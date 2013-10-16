@@ -1,7 +1,7 @@
 #ifndef NUMBER_H_
 #define NUMBER_H_
 
-#include "helper_types.h"
+#include <chelper/helper_types.h>
 
 BOOL charactere_is_null(char c);
 BOOL charactere_is_hex(char c);

@@ -1,7 +1,7 @@
 #ifndef SIGNALSLOT_H_
 #define SIGNALSLOT_H_
 
-#include "helper_types.h"
+#include <chelper/helper_types.h>
 
 void signal_init(signal_t *);
 void signal_deinit(signal_t *);

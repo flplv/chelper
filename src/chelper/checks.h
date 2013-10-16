@@ -1,8 +1,8 @@
 #ifndef OBJCHECK_H_
 #define OBJCHECK_H_
 
-#include "chelper/log.h"
-#include "chelper/fatal.h"
+#include <chelper/log.h>
+#include <chelper/fatal.h>
 
 #define MEMORY_ALLOC_CHECK(__obj) \
 	if (!__obj) { \
