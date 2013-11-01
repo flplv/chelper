@@ -52,6 +52,6 @@ the headers files.
 	
 	/chelper$ make dev_lib
 
-2) Include the **src/chelper** folder in your compiler command
+2) Include the **include** folder in your compiler command (*CFLAGS += -I$(CHELPER_PATH)/include*)
 
-3) Link the file **libchelper-dev.a** when building your application
+3) Link the file **libchelper-dev.a** when building your application (*LDFLAGS += -L$(CHELPER_PATH)/lib -lchelper-dev*)
