@@ -26,6 +26,11 @@
 #include <chelper/helper_types.h>
 #include <chelper/signalslot.h>
 
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
+
 void my_string_init(my_string_t *);
 void my_string_deinit(my_string_t *);
 
@@ -39,5 +44,8 @@ signal_t * my_string_get_update_signal(my_string_t * obj);
 
 size_t my_strlen(const char* str);
 
+#ifdef __cplusplus 
+}
+#endif
 
 #endif /* MY_STRING_H_ */

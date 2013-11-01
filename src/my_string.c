@@ -20,10 +20,10 @@
  *    THE SOFTWARE.
  */
 
-#include "chelper/my_string.h"
-#include "chelper/vector.h"
-#include "chelper/checks.h"
-#include "chelper/signalslot.h"
+#include <chelper/my_string.h>
+#include <chelper/vector.h>
+#include <chelper/checks.h>
+#include <chelper/signalslot.h>
 
 #define SIGNATURE_MY_STRING (ADDRESS_TO_SIGNATURE_CAST)&my_string_create
 

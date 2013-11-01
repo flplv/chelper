@@ -25,6 +25,10 @@
 
 #include <chelper/helper_types.h>
 
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 void signal2_init(signal2_t *);
 void signal2_deinit(signal2_t *);
 
@@ -35,5 +39,9 @@ void slot2_deinit(slot2_t *);
 
 void slot2_set(slot2_t *, slot2_func function, slot_arg arg);
 void slot2_connect(slot2_t *, signal2_t *);
+
+#ifdef __cplusplus 
+}
+#endif
 
 #endif /* SIGNALSLOT2_H_ */

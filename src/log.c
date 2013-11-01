@@ -28,6 +28,7 @@
 #include <string.h>
 
 static int run_time_lvl = WARNING;
+static BOOL debug = FALSE;
 
 int get_sys_dbg_lvl() {
 	return run_time_lvl;
@@ -35,6 +36,18 @@ int get_sys_dbg_lvl() {
 
 void set_sys_dbg_lvl(int level) {
 	run_time_lvl = level;
+}
+
+void enable_debug() {
+	debug = TRUE;
+}
+
+void disable_debug() {
+	debug = FALSE;
+}
+
+BOOL get_debug_state() {
+	return debug;
 }
 
 static int (*sys_stdout_impl)(const char *__restrict __format, _G_va_list __arg) = vprintf;

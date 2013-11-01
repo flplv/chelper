@@ -25,6 +25,10 @@
 
 #include <chelper/helper_types.h>
 
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 void timeout_init(timeout_t *);
 timeout_t timeout_init_cpy(void);
 
@@ -39,5 +43,9 @@ BOOL timeout_check_and_reinit(timeout_t * cobj, uint32_t period_ms);
 void timeout_sleep(timeout_t *cobj, uint32_t period_ms);
 
 uint32_t time_now(void);
+
+#ifdef __cplusplus 
+}
+#endif
 
 #endif /* TIMEOUT_H_ */

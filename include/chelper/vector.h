@@ -25,6 +25,10 @@
 
 #include <chelper/helper_types.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void vector_init(vector_t *, size_t item_size);
 void vector_deinit(vector_t *);
 
@@ -37,5 +41,9 @@ void vector_remove(vector_t *, size_t pos);
 void vector_clear(vector_t *);
 
 const void * vector_data(vector_t *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* VECTOR_H_ */

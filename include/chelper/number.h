@@ -25,6 +25,10 @@
 
 #include <chelper/helper_types.h>
 
+#ifdef __cplusplus 
+extern "C" {
+#endif
+
 BOOL charactere_is_null(char c);
 BOOL charactere_is_hex(char c);
 BOOL charactere_is_space(char c);
@@ -33,6 +37,10 @@ BOOL charactere_is_printable(char c);
 uint8_t charactere_hex_to_int(char c);
 int32_t string_hex_to_int(const char* str);
 void int_to_string(int32_t number, char * target, size_t size);
+
+#ifdef __cplusplus 
+}
+#endif
 
 #define MAX(__1__, __2__) (((__1__)>(__2__))?(__1__):(__2__))
 #define MIN(__1__, __2__) (((__1__)<(__2__))?(__1__):(__2__))

@@ -46,7 +46,7 @@ CPPUTEST_HOME = ./CppUTest
 ### TEST DEV CFG ###
 
 TEST_DEV_CFLAGS = \
-		-I$(CPPUTEST_HOME)/include/ -Isrc -g \
+		-I$(CPPUTEST_HOME)/include/ -Iinclude -Isrc -g \
 		-D AUTO_GEN_BUILD_TAG='"${BUILDTAG}"' \
 		-D AUTO_GEN_FIRWMARE_VERSION='"${FIRWMARE_VERSION}"' \
 		-D SYSTEM_UNIT_TEST 
@@ -57,10 +57,10 @@ TEST_DEV_LDLIBS =
 ### DEV CFG ###
 				
 DEV_CFLAGS = \
-		-Isrc \
+		-Iinclude \
 		-D AUTO_GEN_BUILD_TAG='"${BUILDTAG}"' \
 		-D AUTO_GEN_FIRWMARE_VERSION='"${FIRWMARE_VERSION}"' \
 		
-DEV_LDFLAGS =
+DEV_LDFLAGS = -fPIC
 DEV_LDLIBS =	
 	
