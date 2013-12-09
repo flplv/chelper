@@ -69,6 +69,8 @@ struct s_ring_fifo_private
 	BOOL full;
 	uint32_t rd;
 	uint32_t wr;
+	BOOL nocp_pop_started;
+	BOOL nocp_push_started;
 };
 typedef uint8_t ring_fifo_t[sizeof(struct s_ring_fifo_private)];
 

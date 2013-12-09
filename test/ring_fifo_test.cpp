@@ -83,3 +83,27 @@ TEST(ring_fifo, add_peek_full_pop)
 
 	ring_fifo_deinit(&cut);
 }
+
+TEST(ring_fifo, nocopy)
+{
+	ring_fifo_t cut;
+	BUFFER_PTR pBuf;
+
+	ring_fifo_init(&cut, 5, 3);
+
+	CHECK_TRUE(ring_fifo_is_empty(&cut));
+
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	memcpy(pBuf, (void *)"ABCD", 5);
+	ring_fifo_zerocopy_push_finish(&cut);
+
+	CHECK_FALSE(ring_fifo_is_empty(&cut));
+
+	pBuf = ring_fifo_zerocopy_pop_start(&cut);
+	STRCMP_EQUAL("ABCD", (const char *)pBuf);
+	ring_fifo_zerocopy_pop_finish(&cut);
+
+	CHECK_TRUE(ring_fifo_is_empty(&cut));
+
+	ring_fifo_deinit(&cut);
+}

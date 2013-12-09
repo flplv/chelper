@@ -34,8 +34,14 @@ BOOL ring_fifo_is_empty(ring_fifo_t *);
 
 BUFFER_PTR ring_fifo_peek(ring_fifo_t *);
 BOOL ring_fifo_pop(ring_fifo_t *, BUFFER_PTR to);
-
 BOOL ring_fifo_push(ring_fifo_t *, BUFFER_PTR_RDOLY copy_src);
+
+/* Zero copy methodology implementation */
+BUFFER_PTR ring_fifo_zerocopy_pop_start(ring_fifo_t *);
+void ring_fifo_zerocopy_pop_finish(ring_fifo_t *);
+
+BUFFER_PTR ring_fifo_zerocopy_push_start(ring_fifo_t *);
+void ring_fifo_zerocopy_push_finish(ring_fifo_t *);
 
 
 #endif /* RINGFIFO_H_ */
