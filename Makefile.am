@@ -1,0 +1,1 @@
+SUBDIRS=libChelper include exampleProgram
