@@ -8,7 +8,7 @@ lib_LTLIBRARIES = libchelper.la
 # Build information for each library
 
 # Sources for libChelper
-libchelper_la_SOURCES = fatal.c log.c my_string.c number.c ring_fifo.c signalslot.c signalslot2.c timeout.c vector.c
+libchelper_la_SOURCES = log.c my_string.c number.c ring_fifo.c signalslot.c signalslot2.c timeout.c vector.c
 
 # Linker options libTestProgram
 libchelper_la_LDFLAGS = 

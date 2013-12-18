@@ -24,12 +24,10 @@
 #define OBJCHECK_H_
 
 #include <chelper/log.h>
-#include <chelper/fatal.h>
 
 #define MEMORY_ALLOC_CHECK(__obj) \
 	if (!__obj) { \
 		MSG_ERROR("Failed to alloc memory", "Malloc"); \
-		fatal("Locked"); \
  		while(1); \
 	}
 
