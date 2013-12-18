@@ -19,39 +19,26 @@ by macros.
 		Number
 		Timeout (posix dependent)
 		Log
-	
-	Unrecomended use Modules (Will be removed):
-		Fatal - It is useless
-		
 		
 
-How to run unit tests
----------------------
+How to build
+------------
 
-1) Decompress CppUTest.zip on repository root folder and make:
-
-	/chelper$ unzip CppUTest.zip
-	/chelper$ cd CppUTest
-	/chelper/CppUTest$ make
-	/chelper/CppUTest$ cd ..
-	
-2) Build the test target of chelper
-
-	/chelper$ make dev_test
-	
-3) Now chelper will build and the tests will run automatically at the end of the build process.	
+   Simply run autobuild.sh on the project root folder.
+   ps: Autotools are used, make shure you have it fully installed.
 
 
 How to use	
 ----------
 
-The **chelper** creates a static library that must be manually added to your build system aside
-the headers files.
+The **chelper** install a libchelper.so and its includes on your system.
+Link **chelper** with LDFLAGS += -lchelper, and check /usr/local/includes/chelper
+for the headers available.
 
-1) Build the static library:
-	
-	/chelper$ make dev_lib
+How to run the Tests
+--------------------
+The tests are automatically built, so you will need to have installed CppUTest,
+if using ubuntu run sudo apt-get install CppUTest. Be aware that the build might break
+without CppUTest installed. 
 
-2) Include the **include** folder in your compiler command (*CFLAGS += -I$(CHELPER_PATH)/include*)
-
-3) Link the file **libchelper-dev.a** when building your application (*LDFLAGS += -L$(CHELPER_PATH)/lib -lchelper-dev*)
+To run the tests cd into build/test/ and run ./chelpertest
