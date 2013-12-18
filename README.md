@@ -25,7 +25,7 @@ How to build
 ------------
 
    Simply run autobuild.sh on the project root folder.
-   ps: Autotools are used, make shure you have it fully installed.
+   ps: Autotools are used, make sure you have it fully installed.
 
 
 How to use	
