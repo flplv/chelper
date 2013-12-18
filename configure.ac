@@ -18,9 +18,12 @@ LT_INIT
 dnl Check if Libtool is present
 dnl Libtool is used for building share libraries 
 AC_PROG_LIBTOOL
+AC_PROG_CXX
+
+AC_CHECK_HEADERS
 
 AC_CONFIG_FILES(Makefile
-                exampleProgram/Makefile
-                libChelper/Makefile
+                test/Makefile
+                lib/Makefile
                 include/Makefile)
 AC_OUTPUT

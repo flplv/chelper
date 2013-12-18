@@ -25,8 +25,6 @@
 
 #if !defined SYSTEM_UNIT_TEST
 #include <malloc.h>
-#else
-#include "CppUTest/MemoryLeakDetectorMallocMacros.h"
 #endif
 
 #include <stdint.h>

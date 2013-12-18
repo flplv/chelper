@@ -1,1 +1,3 @@
-SUBDIRS=libChelper include exampleProgram
+include  $(top_srcdir)/PreRules.am
+
+SUBDIRS=lib include test
