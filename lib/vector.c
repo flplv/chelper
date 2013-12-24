@@ -25,6 +25,7 @@
 #include "chelper/checks.h"
 #include "chelper/log.h"
 #include <string.h>
+#include <stdbool.h>
 
 static BUFFER_PTR _at(struct s_vector_private * obj, size_t pos)
 {

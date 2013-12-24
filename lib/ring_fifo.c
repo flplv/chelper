@@ -25,12 +25,12 @@
 #include "chelper/checks.h"
 #include <string.h>
 
-static BOOL _full(struct s_ring_fifo_private * obj)
+static bool _full(struct s_ring_fifo_private * obj)
 {
 	return obj->full;
 }
 
-static BOOL _empty(struct s_ring_fifo_private * obj)
+static bool _empty(struct s_ring_fifo_private * obj)
 {
 	return (obj->rd == obj->wr) && !obj->full;
 }
@@ -71,9 +71,9 @@ void ring_fifo_init(ring_fifo_t * cobj, size_t element_size, int32_t num_of_elem
 	obj->num_fifo_slots = num_of_elements;
 	obj->rd = 0;
 	obj->wr = 0;
-	obj->full = FALSE;
-	obj->nocp_pop_started = FALSE;
-	obj->nocp_push_started = FALSE;
+	obj->full = false;
+	obj->nocp_pop_started = false;
+	obj->nocp_push_started = false;
 }
 
 void ring_fifo_init_buffer(ring_fifo_t * cobj, BUFFER_PTR buffer, size_t buffer_size, size_t element_size)
@@ -88,9 +88,9 @@ void ring_fifo_init_buffer(ring_fifo_t * cobj, BUFFER_PTR buffer, size_t buffer_
 	obj->num_fifo_slots = buffer_size / element_size;
 	obj->rd = 0;
 	obj->wr = 0;
-	obj->full = TRUE;
-	obj->nocp_pop_started = FALSE;
-	obj->nocp_push_started = FALSE;
+	obj->full = true;
+	obj->nocp_pop_started = false;
+	obj->nocp_push_started = false;
 }
 
 void ring_fifo_deinit(ring_fifo_t *cobj)
@@ -107,18 +107,18 @@ void ring_fifo_deinit(ring_fifo_t *cobj)
 	}
 }
 
-BOOL ring_fifo_is_full(ring_fifo_t *cobj)
+bool ring_fifo_is_full(ring_fifo_t *cobj)
 {
 	struct s_ring_fifo_private * obj = (struct s_ring_fifo_private *)cobj;
-	PTR_CHECK_RETURN(obj, "ring_fifo", FALSE);
+	PTR_CHECK_RETURN(obj, "ring_fifo", false);
 
 	return _full(obj);
 }
 
-BOOL ring_fifo_is_empty(ring_fifo_t *cobj)
+bool ring_fifo_is_empty(ring_fifo_t *cobj)
 {
 	struct s_ring_fifo_private * obj = (struct s_ring_fifo_private *)cobj;
-	PTR_CHECK_RETURN(obj, "ring_fifo", TRUE);
+	PTR_CHECK_RETURN(obj, "ring_fifo", true);
 
 	return _empty(obj);
 }
@@ -132,13 +132,13 @@ BUFFER_PTR ring_fifo_peek(ring_fifo_t *cobj)
 	return _rd_ptr(obj);
 }
 
-BOOL ring_fifo_pop(ring_fifo_t *cobj, BUFFER_PTR to)
+bool ring_fifo_pop(ring_fifo_t *cobj, BUFFER_PTR to)
 {
 	struct s_ring_fifo_private * obj = (struct s_ring_fifo_private *)cobj;
-	PTR_CHECK_RETURN(obj, "ring_fifo", FALSE);
+	PTR_CHECK_RETURN(obj, "ring_fifo", false);
 
 	if (_empty(obj))
-		return FALSE;
+		return false;
 
 	if (to)
 		memcpy(to, _rd_ptr(obj), obj->element_size);
@@ -146,30 +146,30 @@ BOOL ring_fifo_pop(ring_fifo_t *cobj, BUFFER_PTR to)
 	obj->rd++;
 
 	if (obj->rd == obj->wr)
-		obj->full = FALSE;
+		obj->full = false;
 
-	return TRUE;
+	return true;
 }
 
-BOOL ring_fifo_push(ring_fifo_t *cobj, BUFFER_PTR_RDOLY copy_src)
+bool ring_fifo_push(ring_fifo_t *cobj, BUFFER_PTR_RDOLY copy_src)
 {
 	struct s_ring_fifo_private * obj = (struct s_ring_fifo_private *)cobj;
-	PTR_CHECK_RETURN(obj, "ring_fifo", FALSE);
+	PTR_CHECK_RETURN(obj, "ring_fifo", false);
 
 	if (_full(obj))
-		return FALSE;
+		return false;
 
 	if (!copy_src)
-		return FALSE;
+		return false;
 
 	memcpy(_wr_ptr(obj), copy_src, obj->element_size);
 
 	obj->wr++;
 
 	if (obj->wr%obj->num_fifo_slots == obj->rd%obj->num_fifo_slots)
-		obj->full = TRUE;
+		obj->full = true;
 
-	return TRUE;
+	return true;
 }
 
 
@@ -181,7 +181,7 @@ BUFFER_PTR ring_fifo_zerocopy_pop_start(ring_fifo_t * cobj)
 	if (_empty(obj))
 		return NULL;
 
-	obj->nocp_pop_started = TRUE;
+	obj->nocp_pop_started = true;
 
 	return _rd_ptr(obj);
 }
@@ -197,9 +197,9 @@ void ring_fifo_zerocopy_pop_finish(ring_fifo_t * cobj)
 	obj->rd++;
 
 	if (obj->rd == obj->wr)
-		obj->full = FALSE;
+		obj->full = false;
 
-	obj->nocp_pop_started = FALSE;
+	obj->nocp_pop_started = false;
 }
 
 BUFFER_PTR ring_fifo_zerocopy_push_start(ring_fifo_t * cobj)
@@ -210,7 +210,7 @@ BUFFER_PTR ring_fifo_zerocopy_push_start(ring_fifo_t * cobj)
 	if (_full(obj))
 		return NULL;
 
-	obj->nocp_push_started = TRUE;
+	obj->nocp_push_started = true;
 
 	return _wr_ptr(obj);
 }
@@ -226,7 +226,7 @@ void ring_fifo_zerocopy_push_finish(ring_fifo_t * cobj)
 	obj->wr++;
 
 	if (obj->wr%obj->num_fifo_slots == obj->rd%obj->num_fifo_slots)
-		obj->full = TRUE;
+		obj->full = true;
 
-	obj->nocp_push_started = FALSE;
+	obj->nocp_push_started = false;
 }

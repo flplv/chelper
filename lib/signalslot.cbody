@@ -1,0 +1,119 @@
+static void slot_func_decl(call)(slot_func_args);
+
+void signal_func_decl(init)(signal_t * cobj)
+{
+	struct s_signal_private * obj = (struct s_signal_private *) cobj;
+	PTR_CHECK(obj, signal_string);
+
+	vector_init(&obj->slots_vector, sizeof(slot_t *));
+}
+
+void signal_func_decl(deinit)(signal_t * cobj)
+{
+	struct s_signal_private * obj = (struct s_signal_private *) cobj;
+	PTR_CHECK(obj, signal_string);
+
+	vector_deinit(&obj->slots_vector);
+}
+
+void signal_func_decl(emit)(slot_func_args)
+{
+	uint32_t n_of_slots;
+	slot_t *slot_to_be_called = NULL;
+
+	struct s_signal_private * obj = (struct s_signal_private *) cobj;
+	PTR_CHECK(obj, signal_string);
+
+	n_of_slots = vector_size(&obj->slots_vector);
+
+	while(n_of_slots--)
+	{
+		slot_to_be_called = *(slot_t **)vector_at(&obj->slots_vector, n_of_slots);
+		slot_func_decl(call)(slot_to_be_called signal_slot_func_args_variable);
+	}
+
+}
+
+static bool signal_func_decl(is_connected)(signal_t *cobj, slot_t *slot)
+{
+	uint32_t n_of_slots;
+	slot_t *slot_to_be_checked;
+
+	struct s_signal_private * obj = (struct s_signal_private *) cobj;
+	PTR_CHECK_RETURN(obj, signal_string, false);
+
+	n_of_slots = vector_size(&obj->slots_vector);
+
+	while(n_of_slots--)
+	{
+		slot_to_be_checked = *(slot_t **)vector_at(&obj->slots_vector, n_of_slots);
+		if(slot == slot_to_be_checked)
+			return true;
+	}
+
+	return false;
+}
+
+static void signal_func_decl(connect)(signal_t *cobj, slot_t *slot)
+{
+	struct s_signal_private * obj = (struct s_signal_private *) cobj;
+	PTR_CHECK(obj, signal_string);
+
+	if (signal_func_decl(is_connected)(cobj, slot))
+		return;
+
+	vector_add(&obj->slots_vector, (BUFFER_PTR)&slot);
+}
+
+void slot_func_decl(init)(slot_t * cobj)
+{
+	struct s_slot_private * obj = (struct s_slot_private *) cobj;
+	PTR_CHECK(obj, slot_string);
+}
+
+void slot_func_decl(deinit)(slot_t * cobj)
+{
+	struct s_slot_private * obj = (struct s_slot_private *) cobj;
+	PTR_CHECK(obj, slot_string);;
+}
+
+void slot_func_decl(set)(slot_t *cobj, slot_func function, slot_arg arg)
+{
+	struct s_slot_private * obj = (struct s_slot_private *) cobj;
+	PTR_CHECK(obj, slot_string);
+
+	if (!function) {
+		MSG_ERROR("bad slot function", slot_string);
+		return;
+	}
+
+	obj->func = function;
+	obj->arg0 = arg;
+	obj->set = true;
+}
+
+void slot_func_decl(connect)(slot_t *cobj, signal_t* signal)
+{
+	struct s_slot_private * obj = (struct s_slot_private *) cobj;
+	PTR_CHECK(obj, slot_string);
+
+	signal_func_decl(connect)(signal, cobj);
+}
+
+static void slot_func_decl(call)(slot_func_args)
+{
+	struct s_slot_private * obj = (struct s_slot_private *) cobj;
+	PTR_CHECK(obj, slot_string);
+
+	if (!obj->set) {
+		MSG_ERROR("no slot function set", slot_string);
+		return;
+	}
+
+	if (!obj->func) {
+		MSG_ERROR("bad slot function", slot_string);
+		return;
+	}
+
+	obj->func(obj->arg0 signal_slot_func_args_variable);
+}

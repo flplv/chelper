@@ -42,11 +42,11 @@ void set_sys_dbg_lvl(int level);
 int get_sys_dbg_lvl();
 void enable_debug();
 void disable_debug();
-BOOL get_debug_state();
+bool get_debug_state();
 
 #ifdef SYSTEM_UNIT_TEST
 
-void sys_set_interception(BOOL enabled);
+void sys_set_interception(bool enabled);
 char * sys_get_intercepted_message();
 
 #endif

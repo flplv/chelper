@@ -48,5 +48,10 @@
 		return __ret__; \
 	}
 
+#define assert(__assertion__, __module__) \
+		if (!assertion) { \
+			MSG_ERROR("Assertion " #__assertion__ " failed", __module__); \
+		}
+
 
 #endif /* OBJCHECK_H_ */

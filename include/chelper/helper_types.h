@@ -28,15 +28,16 @@
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 
-#ifndef FALSE
-#define FALSE 0
+#ifndef false
+#define false 0
 #endif
-#ifndef TRUE
-#define TRUE 1
+#ifndef true
+#define true 1
 #endif
-#ifndef BOOL
-#define BOOL uint32_t
+#ifndef bool
+#define bool uint32_t
 #endif
 #ifndef __SIZE_TYPE__
 typedef unsigned int size_t;
@@ -64,45 +65,50 @@ struct s_ring_fifo_private
 	size_t buffer_size;
 	size_t element_size;
 	uint32_t num_fifo_slots;
-	BOOL full;
+	bool full;
 	uint32_t rd;
 	uint32_t wr;
-	BOOL nocp_pop_started;
-	BOOL nocp_push_started;
+	bool nocp_pop_started;
+	bool nocp_push_started;
 };
 typedef uint8_t ring_fifo_t[sizeof(struct s_ring_fifo_private)];
 
 typedef void * slot_arg;
 typedef void(*slot_func)(slot_arg);
 typedef void(*slot2_func)(slot_arg, size_t, size_t);
+typedef void(*slot_opaque_func)(slot_arg, void *, size_t);
 
 struct s_signal_private
 {
 	vector_t slots_vector;
 };
 typedef uint8_t signal_t[sizeof(struct s_signal_private)];
+typedef uint8_t signal2_t[sizeof(struct s_signal_private)];
+typedef uint8_t signal_opaque_t[sizeof(struct s_signal_private)];
 
 struct s_slot_private
 {
 	slot_func func;
 	slot_arg arg0;
-	BOOL set;
+	bool set;
 };
 typedef uint8_t slot_t[sizeof(struct s_slot_private)];
-
-struct s_signal2_private
-{
-	vector_t slot2s_vector;
-};
-typedef uint8_t signal2_t[sizeof(struct s_signal2_private)];
 
 struct s_slot2_private
 {
 	slot2_func func;
 	slot_arg arg0;
-	BOOL set;
+	bool set;
 };
 typedef uint8_t slot2_t[sizeof(struct s_slot2_private)];
+
+struct s_slot_opaque_private
+{
+	slot_opaque_func func;
+	slot_arg arg0;
+	bool set;
+};
+typedef uint8_t slot_opaque_t[sizeof(struct s_slot_opaque_private)];
 
 struct s_my_string
 {

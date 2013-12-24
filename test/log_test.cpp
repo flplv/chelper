@@ -33,13 +33,13 @@ TEST_GROUP(log)
 {
 	void setup()
 	{
-		sys_set_interception(TRUE);
+		sys_set_interception(true);
 		enable_debug();
 	}
 
 	void teardown()
 	{
-		sys_set_interception(FALSE);
+		sys_set_interception(false);
 		disable_debug();
 	}
 };

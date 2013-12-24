@@ -21,7 +21,7 @@
  */
 
 #ifndef NO_POSIX
-
+#include <stdbool.h>
 #include <chelper/timeout.h>
 #include <chelper/checks.h>
 #include <sys/time.h>
@@ -56,21 +56,21 @@ timeout_t timeout_init_cpy(void)
 }
 
 
-BOOL timeout_check(timeout_t * cobj, uint32_t tout_ms)
+bool timeout_check(timeout_t * cobj, uint32_t tout_ms)
 {
     return ( !( (time_now() - *cobj) < tout_ms) );
 }
 
-BOOL timeout_check_and_reinit(timeout_t * cobj, uint32_t period_ms)
+bool timeout_check_and_reinit(timeout_t * cobj, uint32_t period_ms)
 {
     if ( (time_now() - *cobj) < period_ms )
     {
-    	return FALSE;
+    	return false;
     }
     else
     {
     	*cobj += period_ms;
-    	return TRUE;
+    	return true;
     }
 }
 

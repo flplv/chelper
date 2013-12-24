@@ -21,54 +21,55 @@
  */
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <ctype.h>
 #include <string.h>
 
 #include "chelper/number.h"
 
-BOOL charactere_is_null(char c)
+bool charactere_is_null(char c)
 {
 	if (c != '\0')
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
-BOOL charactere_is_hex(char c)
+bool charactere_is_hex(char c)
 {
 	c = toupper(c);
 	if (c > 'F')
-		return FALSE;
+		return false;
 	if (c < '0')
-		return FALSE;
+		return false;
 	if (c > '9' && c < 'A')
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
-BOOL charactere_is_space(char c)
+bool charactere_is_space(char c)
 {
 	c = toupper(c);
 	if (c == ' ')
-		return TRUE;
+		return true;
 	if (c == '\t')
-		return TRUE;
+		return true;
 	if (c == '\n')
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
-BOOL charactere_is_math_sig(char c)
+bool charactere_is_math_sig(char c)
 {
 	c = toupper(c);
 	if (c == '+')
-		return TRUE;
+		return true;
 	if (c == '-')
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 uint8_t charactere_hex_to_int(char c)
@@ -88,7 +89,7 @@ int32_t string_hex_to_int(const char* str)
 	uint32_t i;
 	char c;
 	uint32_t size = strlen(str);
-	BOOL started = FALSE;
+	bool started = false;
 	int8_t signal = 1;
 	uint32_t final_value = 0;
 
@@ -112,7 +113,7 @@ int32_t string_hex_to_int(const char* str)
 		{
 			if (!started)
 			{
-				started = TRUE;
+				started = true;
 				if (c == '-')
 					signal = -1;
 			}
@@ -121,7 +122,7 @@ int32_t string_hex_to_int(const char* str)
 		}
 		else if (charactere_is_hex(c))
 		{
-			started = TRUE;
+			started = true;
 			final_value *= 16;
 			final_value += charactere_hex_to_int(c);
 		}
@@ -152,13 +153,13 @@ void int_to_string(int32_t number, char * target, size_t size)
 	}
 }
 
-BOOL charactere_is_printable(char c)
+bool charactere_is_printable(char c)
 {
 	if (c < ' ')
-		return FALSE;
+		return false;
 
 	if (c > '~')
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }

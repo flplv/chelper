@@ -28,7 +28,7 @@
 #include <string.h>
 
 static int run_time_lvl = WARNING;
-static BOOL debug = FALSE;
+static bool debug = false;
 
 int get_sys_dbg_lvl() {
 	return run_time_lvl;
@@ -39,14 +39,14 @@ void set_sys_dbg_lvl(int level) {
 }
 
 void enable_debug() {
-	debug = TRUE;
+	debug = true;
 }
 
 void disable_debug() {
-	debug = FALSE;
+	debug = false;
 }
 
-BOOL get_debug_state() {
+bool get_debug_state() {
 	return debug;
 }
 
@@ -69,7 +69,7 @@ static int intercepted_stdout(const char * format,  va_list va)
 	return vsprintf(intercepted_output, format, va);
 }
 
-void sys_set_interception(BOOL enabled)
+void sys_set_interception(bool enabled)
 {
 	if (enabled)
 		sys_stdout_impl = intercepted_stdout;

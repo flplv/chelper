@@ -87,12 +87,12 @@ inline void fast_ring_fifo_read_reset(fast_ring_fifo_t * obj)
 	obj->wrIdx = 0;
 }
 
-inline BOOL fast_ring_fifo_empty(fast_ring_fifo_t * obj)
+inline bool fast_ring_fifo_empty(fast_ring_fifo_t * obj)
 {
 	return obj->rdIdx == obj->wrIdx;
 }
 
-inline BOOL fast_ring_fifo_full(fast_ring_fifo_t * obj)
+inline bool fast_ring_fifo_full(fast_ring_fifo_t * obj)
 {
 	return (obj->mask & obj->rdIdx) == (obj->mask & (obj->wrIdx+1));
 }

@@ -29,12 +29,12 @@ void ring_fifo_init(ring_fifo_t *, size_t element_size, int32_t num_of_elements)
 void ring_fifo_init_buffer(ring_fifo_t *, BUFFER_PTR buffer, size_t buffer_size, size_t element_size);
 void ring_fifo_deinit(ring_fifo_t *);
 
-BOOL ring_fifo_is_full(ring_fifo_t *);
-BOOL ring_fifo_is_empty(ring_fifo_t *);
+bool ring_fifo_is_full(ring_fifo_t *);
+bool ring_fifo_is_empty(ring_fifo_t *);
 
 BUFFER_PTR ring_fifo_peek(ring_fifo_t *);
-BOOL ring_fifo_pop(ring_fifo_t *, BUFFER_PTR to);
-BOOL ring_fifo_push(ring_fifo_t *, BUFFER_PTR_RDOLY copy_src);
+bool ring_fifo_pop(ring_fifo_t *, BUFFER_PTR to);
+bool ring_fifo_push(ring_fifo_t *, BUFFER_PTR_RDOLY copy_src);
 
 /* Zero copy methodology implementation */
 BUFFER_PTR ring_fifo_zerocopy_pop_start(ring_fifo_t *);

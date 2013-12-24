@@ -20,32 +20,28 @@
  *    THE SOFTWARE.
  */
 
-#ifndef TIMEOUT_H_
-#define TIMEOUT_H_
+#include <stdbool.h>
+#include "chelper/signalslot_opaque.h"
+#include "chelper/vector.h"
+#include "chelper/checks.h"
+#include "chelper/log.h"
 
-#include <chelper/helper_types.h>
+#define s_slot_private s_slot_opaque_private
 
-#ifdef __cplusplus 
-extern "C" {
-#endif
+#define slot_func slot_opaque_func
 
-void timeout_init(timeout_t *);
-timeout_t timeout_init_cpy(void);
+#define signal_func_decl(name) signal_opaque_##name
+#define slot_func_decl(name) slot_opaque_##name
 
-/* Return true if tout_ms has elapsed */
-bool timeout_check(timeout_t *, uint32_t tout_ms);
+#define signal_t   signal_opaque_t
+#define slot_t   slot_opaque_t
 
-/* Return true if tout_ms has elapsed and reinit cobj, so it can be used after to create periodically execution */
-bool timeout_check_and_reinit(timeout_t * cobj, uint32_t period_ms);
+#define slot_func_args slot_opaque_t * cobj, void * data, size_t size
+#define signal_func_args signal_opaque_t * cobj, void * data, size_t size
 
-/* Sleep until the next timeout (use only to spend time while waiting for a timeout,
-   do not count on time precision of this function) */
-void timeout_sleep(timeout_t *cobj, uint32_t period_ms);
+#define signal_slot_func_args_variable , data, size
 
-uint32_t time_now(void);
+#define signal_string "signal_opaque"
+#define slot_string "slot_opaque"
 
-#ifdef __cplusplus 
-}
-#endif
-
-#endif /* TIMEOUT_H_ */
+#include "./signalslot.cbody"

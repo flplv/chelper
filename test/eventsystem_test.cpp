@@ -20,32 +20,60 @@
  *    THE SOFTWARE.
  */
 
-#ifndef TIMEOUT_H_
-#define TIMEOUT_H_
+#include "CppUTest/TestHarness.h"
+#include "CppUTest/MemoryLeakDetector.h"
 
-#include <chelper/helper_types.h>
-
-#ifdef __cplusplus 
 extern "C" {
-#endif
-
-void timeout_init(timeout_t *);
-timeout_t timeout_init_cpy(void);
-
-/* Return true if tout_ms has elapsed */
-bool timeout_check(timeout_t *, uint32_t tout_ms);
-
-/* Return true if tout_ms has elapsed and reinit cobj, so it can be used after to create periodically execution */
-bool timeout_check_and_reinit(timeout_t * cobj, uint32_t period_ms);
-
-/* Sleep until the next timeout (use only to spend time while waiting for a timeout,
-   do not count on time precision of this function) */
-void timeout_sleep(timeout_t *cobj, uint32_t period_ms);
-
-uint32_t time_now(void);
-
-#ifdef __cplusplus 
+#include "chelper/eventsystem.h"
+#include "chelper/signalslot_opaque.h"
 }
-#endif
 
-#endif /* TIMEOUT_H_ */
+TEST_GROUP(eventsystem)
+{
+	event_loop_t cut;
+	int called;
+
+	void setup()
+	{
+		event_loop_init(&cut);
+		called = 0;
+	}
+
+	void teardown()
+	{
+		event_loop_deinit(&cut);
+	}
+
+	static void callback (TEST_GROUP_CppUTestGroupeventsystem * self, void * data, size_t size)
+	{
+		self->called ++;
+	}
+};
+
+
+TEST(eventsystem, loop)
+{
+	event_handler_t handle;
+	slot_opaque_t slot;
+	int tout = 10;
+
+	slot_opaque_init(&slot);
+	slot_opaque_set(&slot, (slot_opaque_func)TEST_GROUP_CppUTestGroupeventsystem::callback, this);
+
+	event_handler_init(&handle);
+	slot_opaque_connect(&slot, event_handler_signal(&handle));
+
+	event_loop_queue_event(&cut, &handle);
+	event_loop_queue_event(&cut, &handle);
+	event_loop_queue_event(&cut, &handle);
+	event_loop_queue_event(&cut, &handle);
+
+	while (event_loop_has_pending_events(&cut) && tout--)
+		event_loop_periodic(&cut);
+
+	CHECK_EQUAL(10-4, tout);
+	CHECK_EQUAL(4, called);
+
+	slot_opaque_deinit(&slot);
+	event_handler_deinit(&handle);
+}

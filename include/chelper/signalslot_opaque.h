@@ -20,32 +20,28 @@
  *    THE SOFTWARE.
  */
 
-#ifndef TIMEOUT_H_
-#define TIMEOUT_H_
+#ifndef SIGNALSLOTOPAQUE_H_
+#define SIGNALSLOTOPAQUE_H_
 
 #include <chelper/helper_types.h>
 
-#ifdef __cplusplus 
+#ifdef __cplusplus
 extern "C" {
 #endif
 
-void timeout_init(timeout_t *);
-timeout_t timeout_init_cpy(void);
+void signal_opaque_init(signal_opaque_t *);
+void signal_opaque_deinit(signal_opaque_t *);
 
-/* Return true if tout_ms has elapsed */
-bool timeout_check(timeout_t *, uint32_t tout_ms);
+void signal_opaque_emit(signal_opaque_t *, void * data, size_t size);
 
-/* Return true if tout_ms has elapsed and reinit cobj, so it can be used after to create periodically execution */
-bool timeout_check_and_reinit(timeout_t * cobj, uint32_t period_ms);
+void slot_opaque_init(slot_opaque_t *);
+void slot_opaque_deinit(slot_opaque_t *);
 
-/* Sleep until the next timeout (use only to spend time while waiting for a timeout,
-   do not count on time precision of this function) */
-void timeout_sleep(timeout_t *cobj, uint32_t period_ms);
+void slot_opaque_set(slot_opaque_t *, slot_opaque_func function, slot_arg arg);
+void slot_opaque_connect(slot_opaque_t *, signal_opaque_t *);
 
-uint32_t time_now(void);
-
-#ifdef __cplusplus 
+#ifdef __cplusplus
 }
 #endif
 
-#endif /* TIMEOUT_H_ */
+#endif /* SIGNALSLOT2_H_ */
