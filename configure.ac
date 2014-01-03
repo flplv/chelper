@@ -20,7 +20,16 @@ dnl Libtool is used for building share libraries
 AC_PROG_LIBTOOL
 AC_PROG_CXX
 
-AC_CHECK_HEADERS
+AC_LANG_PUSH([C++])
+AC_CHECK_LIB([CppUTest], 
+	     [cpputest_malloc],
+             [HAVE_CPPUTEST=1],
+             [[HAVE_CPPUTEST=0],
+             AC_MSG_WARN([CppUTest not found, tests won't be built.])]
+		)
+AC_LANG_POP([C++])
+
+AM_CONDITIONAL(COND_HAVE_CPPUTEST, [test x$HAVE_CPPUTEST = x1])
 
 AC_CONFIG_FILES(Makefile
                 test/Makefile

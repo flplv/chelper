@@ -9,7 +9,11 @@ include  $(top_srcdir)/PreRules.am
 # Because a.out is only a sample program we don't want it to be installed.
 # The 'noinst_' prefix indicates that the following targets are not to be
 # installed.
-noinst_PROGRAMS=chelpertest
+if COND_HAVE_CPPUTEST
+    noinst_PROGRAMS=chelpertest
+else
+    noinst_PROGRAMS=
+endif
 
 #######################################
 # Build information for each executable. The variable name is derived
