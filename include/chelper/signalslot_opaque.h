@@ -32,7 +32,7 @@ extern "C" {
 void signal_opaque_init(signal_opaque_t *);
 void signal_opaque_deinit(signal_opaque_t *);
 
-void signal_opaque_emit(signal_opaque_t *, void * data, size_t size);
+void signal_opaque_emit(signal_opaque_t *, void * ptr);
 
 void slot_opaque_init(slot_opaque_t *);
 void slot_opaque_deinit(slot_opaque_t *);

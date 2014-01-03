@@ -76,7 +76,8 @@ typedef uint8_t ring_fifo_t[sizeof(struct s_ring_fifo_private)];
 typedef void * slot_arg;
 typedef void(*slot_func)(slot_arg);
 typedef void(*slot2_func)(slot_arg, size_t, size_t);
-typedef void(*slot_opaque_func)(slot_arg, void *, size_t);
+typedef void(*slot_data_func)(slot_arg, void *, size_t);
+typedef void(*slot_opaque_func)(slot_arg, void *);
 
 struct s_signal_private
 {
@@ -84,6 +85,7 @@ struct s_signal_private
 };
 typedef uint8_t signal_t[sizeof(struct s_signal_private)];
 typedef uint8_t signal2_t[sizeof(struct s_signal_private)];
+typedef uint8_t signal_data_t[sizeof(struct s_signal_private)];
 typedef uint8_t signal_opaque_t[sizeof(struct s_signal_private)];
 
 struct s_slot_private
@@ -101,6 +103,14 @@ struct s_slot2_private
 	bool set;
 };
 typedef uint8_t slot2_t[sizeof(struct s_slot2_private)];
+
+struct s_slot_data_private
+{
+	slot_data_func func;
+	slot_arg arg0;
+	bool set;
+};
+typedef uint8_t slot_data_t[sizeof(struct s_slot_data_private)];
 
 struct s_slot_opaque_private
 {

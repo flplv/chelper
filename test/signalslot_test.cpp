@@ -68,7 +68,7 @@ TEST_GROUP(signalslot)
 	}
 	static void callme_opaque(TEST_GROUP_CppUTestGroupsignalslot * self, void * data, size_t size)
 	{
-		if (data == (void *)0xF && size == 10)
+		if (data == (void *)self)
 			self->called = true;
 	}
 };
@@ -103,7 +103,7 @@ TEST(signalslot, action_opaque)
 
 	slot_opaque_set(&slot_opaque, (slot_opaque_func)callme_opaque, (slot_arg)this);
 	slot_opaque_connect(&slot_opaque, &signal_opaque);
-	signal_opaque_emit(&signal_opaque, (void *)0xF, 10);
+	signal_opaque_emit(&signal_opaque, (void *)this);
 
 	CHECK_TRUE(called);
 }

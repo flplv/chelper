@@ -24,7 +24,6 @@
 #define LOG_H_
 
 #include <stdio.h>
-#include <syslog.h>
 #include <chelper/helper_types.h>
 
 enum dbg_log_lvl {
@@ -33,7 +32,7 @@ enum dbg_log_lvl {
 	CRITICAL
 };
 
-#ifdef __cplusplus 
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -51,35 +50,44 @@ char * sys_get_intercepted_message();
 
 #endif
 
-#ifdef __cplusplus 
+#ifdef __cplusplus
 }
 #endif
 
+#if defined MODULE_NAME
+
+#define MSG_INFO(msg, ...)			\
+	do {				\
+			if (get_sys_dbg_lvl() == INFO)	\
+				sys_stdout("%s:%d:info: %s: "msg"\r\n", __FILE__, __LINE__, MODULE_NAME, ##__VA_ARGS__);	\
+	} while(0)
+#define MSG_WARNING(msg, ...)		\
+	do {				\
+			sys_stdout("%s:%d:warning: %s: "msg"\r\n", __FILE__, __LINE__, MODULE_NAME, ##__VA_ARGS__);	\
+	} while(0)
+#define MSG_ERROR(msg, ...)		\
+		do {	\
+				sys_stdout("%s:%d:error: %s: "msg"\r\n", __FILE__, __LINE__, MODULE_NAME, ##__VA_ARGS__);	\
+		} while(0)
+
+
+#else
+
 #define MSG_INFO(msg, module_name, ...)			\
 	do {				\
-		if (get_debug_state()) {			\
 			if (get_sys_dbg_lvl() == INFO)	\
-				sys_stdout("\n%s:%d:info: "module_name": "msg"\r\n", __FILE__, __LINE__, ##__VA_ARGS__);	\
-		} else {	\
-			syslog(LOG_INFO, msg, ##__VA_ARGS__);	\
-		}	\
+				sys_stdout("%s:%d:info: %s: "msg"\r\n", __FILE__, __LINE__, module_name, ##__VA_ARGS__);	\
 	} while(0)
 #define MSG_WARNING(msg, module_name, ...)		\
 	do {				\
-		if (get_debug_state()) {	\
-			sys_stdout("\n%s:%d:warning: "module_name": "msg"\r\n", __FILE__, __LINE__, ##__VA_ARGS__);	\
-		} else {	\
-			syslog(LOG_WARNING, msg, ##__VA_ARGS__);	\
-		}	\
+			sys_stdout("%s:%d:warning: %s: "msg"\r\n", __FILE__, __LINE__, module_name, ##__VA_ARGS__);	\
 	} while(0)
 #define MSG_ERROR(msg, module_name, ...)		\
 		do {	\
-			if (get_debug_state()) {	\
-				sys_stdout("\n%s:%d:error: "module_name": "msg"\r\n", __FILE__, __LINE__, ##__VA_ARGS__);	\
-			} else {	\
-				syslog(LOG_ERR, msg, ##__VA_ARGS__);	\
-			}	\
+				sys_stdout("%s:%d:error: %s: "msg"\r\n", __FILE__, __LINE__, module_name, ##__VA_ARGS__);	\
 		} while(0)
+
+#endif
 
 #endif /* LOG_H_ */
 

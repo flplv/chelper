@@ -21,27 +21,27 @@
  */
 
 #include <stdbool.h>
-#include "chelper/signalslot_opaque.h"
+#include "chelper/signalslot_data.h"
 #include "chelper/vector.h"
 #include "chelper/checks.h"
 #include "chelper/log.h"
 
-#define s_slot_private s_slot_opaque_private
+#define s_slot_private s_slot_data_private
 
-#define slot_func slot_opaque_func
+#define slot_func slot_data_func
 
-#define signal_func_decl(name) signal_opaque_##name
-#define slot_func_decl(name) slot_opaque_##name
+#define signal_func_decl(name) signal_data_##name
+#define slot_func_decl(name) slot_data_##name
 
-#define signal_t   signal_opaque_t
-#define slot_t   slot_opaque_t
+#define signal_t   signal_data_t
+#define slot_t   slot_data_t
 
-#define slot_func_args slot_opaque_t * cobj, void * ptr
-#define signal_func_args signal_opaque_t * cobj, void * ptr
+#define slot_func_args slot_data_t * cobj, void * data, size_t size
+#define signal_func_args signal_data_t * cobj, void * data, size_t size
 
-#define signal_slot_func_args_variable , ptr
+#define signal_slot_func_args_variable , data, size
 
-#define signal_string "signal_opaque"
-#define slot_string "slot_opaque"
+#define signal_string "signal_data"
+#define slot_string "slot_data"
 
 #include "./signalslot.cbody"

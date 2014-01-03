@@ -10,8 +10,7 @@ void event_handler_init(event_handler_t * cobj)
 	obj_decl(struct s_event_handler_private, cobj);
 	PTR_CHECK(obj, MODULE_NAME);
 
-	obj->data_arg = NULL;
-	obj->size_arg = 0;
+	obj->opaque_ptr = NULL;
 
 	signal_opaque_init(&obj->signal);
 }
@@ -32,13 +31,12 @@ signal_opaque_t* event_handler_signal(event_handler_t * cobj)
 	return &obj->signal;
 }
 
-void event_handler_set_args(event_handler_t * cobj, void* data, size_t size)
+void event_handler_set_args(event_handler_t * cobj, void* ptr)
 {
 	obj_decl(struct s_event_handler_private, cobj);
 	PTR_CHECK(obj, MODULE_NAME);
 
-	obj->data_arg = data;
-	obj->size_arg = size;
+	obj->opaque_ptr = ptr;
 }
 
 static void event_handler_call(event_handler_t * cobj)
@@ -46,7 +44,7 @@ static void event_handler_call(event_handler_t * cobj)
 	obj_decl(struct s_event_handler_private, cobj);
 	PTR_CHECK(obj, MODULE_NAME);
 
-	signal_opaque_emit(&obj->signal, obj->data_arg, obj->size_arg);
+	signal_opaque_emit(&obj->signal, obj->opaque_ptr);
 }
 
 #undef MODULE_NAME

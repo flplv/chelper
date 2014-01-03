@@ -25,33 +25,65 @@
 
 #include <chelper/log.h>
 
+#if defined MODULE_NAME
+
 #define MEMORY_ALLOC_CHECK(__obj) \
-	if (!__obj) { \
+	if (!(__obj)) { \
 		MSG_ERROR("Failed to alloc memory", "Malloc"); \
- 		while(1); \
+	}
+
+#define PTR_CHECK(__ptr) \
+	if (!(__ptr)) { \
+		MSG_ERROR("Invalid Pointer"); \
+		return; \
+	}
+
+#define PTR_CHECK_SILENT(__ptr) \
+	if (!(__ptr)) { \
+		return; \
+	}
+
+#define PTR_CHECK_RETURN(__ptr, __ret__) \
+	if (!(__ptr)) { \
+		MSG_ERROR("Invalid Pointer"); \
+		return __ret__; \
+	}
+
+#define CH_ASSERT(__assertion__) \
+		if (!(__assertion__)) { \
+			MSG_ERROR("Assertion " #__assertion__ " failed"); \
+		}
+
+
+#else
+
+#define MEMORY_ALLOC_CHECK(__obj) \
+	if (!(__obj)) { \
+		MSG_ERROR("Failed to alloc memory", "Malloc"); \
 	}
 
 #define PTR_CHECK(__ptr, __module__) \
-	if (!__ptr) { \
+	if (!(__ptr)) { \
 		MSG_ERROR("Invalid Pointer", __module__); \
 		return; \
 	}
 
 #define PTR_CHECK_SILENT(__ptr, __module__) \
-	if (!__ptr) { \
+	if (!(__ptr)) { \
 		return; \
 	}
 
 #define PTR_CHECK_RETURN(__ptr, __module__, __ret__) \
-	if (!__ptr) { \
+	if (!(__ptr)) { \
 		MSG_ERROR("Invalid Pointer", __module__); \
 		return __ret__; \
 	}
 
-#define assert(__assertion__, __module__) \
-		if (!assertion) { \
+#define CH_ASSERT(__assertion__, __module__) \
+		if (!(__assertion__)) { \
 			MSG_ERROR("Assertion " #__assertion__ " failed", __module__); \
 		}
 
+#endif
 
 #endif /* OBJCHECK_H_ */

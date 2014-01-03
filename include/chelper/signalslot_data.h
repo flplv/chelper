@@ -20,28 +20,28 @@
  *    THE SOFTWARE.
  */
 
-#include <stdbool.h>
-#include "chelper/signalslot_opaque.h"
-#include "chelper/vector.h"
-#include "chelper/checks.h"
-#include "chelper/log.h"
+#ifndef SIGNALSLOTDATA_H_
+#define SIGNALSLOTDATA_H_
 
-#define s_slot_private s_slot_opaque_private
+#include <chelper/helper_types.h>
 
-#define slot_func slot_opaque_func
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#define signal_func_decl(name) signal_opaque_##name
-#define slot_func_decl(name) slot_opaque_##name
+void signal_data_init(signal_data_t *);
+void signal_data_deinit(signal_data_t *);
 
-#define signal_t   signal_opaque_t
-#define slot_t   slot_opaque_t
+void signal_data_emit(signal_data_t *, void * data, size_t size);
 
-#define slot_func_args slot_opaque_t * cobj, void * ptr
-#define signal_func_args signal_opaque_t * cobj, void * ptr
+void slot_data_init(slot_data_t *);
+void slot_data_deinit(slot_data_t *);
 
-#define signal_slot_func_args_variable , ptr
+void slot_data_set(slot_data_t *, slot_data_func function, slot_arg arg);
+void slot_data_connect(slot_data_t *, signal_data_t *);
 
-#define signal_string "signal_opaque"
-#define slot_string "slot_opaque"
+#ifdef __cplusplus
+}
+#endif
 
-#include "./signalslot.cbody"
+#endif /* SIGNALSLOT2_H_ */

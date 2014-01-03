@@ -5,8 +5,7 @@
 
 struct s_event_handler_private
 {
-	void * data_arg;
-	size_t size_arg;
+	void * opaque_ptr;
 	signal_opaque_t signal;
 };
 typedef uint8_t event_handler_t[sizeof(struct s_event_handler_private)];
@@ -14,7 +13,7 @@ typedef uint8_t event_handler_t[sizeof(struct s_event_handler_private)];
 void event_handler_init(event_handler_t *);
 void event_handler_deinit(event_handler_t *);
 signal_opaque_t * event_handler_signal(event_handler_t *);
-void event_handler_set_args(event_handler_t *, void * data, size_t size);
+void event_handler_set_args(event_handler_t *, void * ptr);
 
 struct s_event_loop_private
 {
