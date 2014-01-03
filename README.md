@@ -16,7 +16,8 @@ by macros.
 		String 
 		Signal Slot with no argument
 		Signal Slot with two int arguments 
-		Signal Slot with opaque argument (void * and size_t)
+		Signal Slot with data argument (void * and size_t)
+		Signal Slot with opaque argument (void *)
 		Event System
 		Number
 		Timeout (posix dependent)
