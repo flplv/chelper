@@ -1,3 +1,3 @@
 include  $(top_srcdir)/PreRules.am
 
-SUBDIRS=lib include test
+SUBDIRS= lib include test

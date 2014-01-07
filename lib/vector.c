@@ -130,6 +130,24 @@ void vector_remove(vector_t *cobj, size_t pos)
 	obj->used_slots --;
 }
 
+void vector_remove_item(vector_t * cobj, BUFFER_PTR_RDOLY item_to_remove)
+{
+	size_t i;
+	struct s_vector_private * obj = (struct s_vector_private *)cobj;
+	PTR_CHECK(obj, "vector");
+
+	for (i = 0; i < obj->used_slots; i++)
+	{
+		BUFFER_PTR vector_item = _at(obj, i);
+
+		if (memcmp(item_to_remove, vector_item, obj->item_size) == 0)
+		{
+			vector_remove(cobj, i);
+			return;
+		}
+	}
+}
+
 size_t vector_size(vector_t* cobj)
 {
 	struct s_vector_private * obj = (struct s_vector_private *)cobj;

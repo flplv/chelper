@@ -115,3 +115,28 @@ TEST(vector, addmany_remove)
 	vector_deinit(&vec);
 }
 
+TEST(vector, addthreeremoveitem)
+{
+	clone_vector[0].a = 10;
+	clone_vector[0].b = 11;
+	clone_vector[1].a = 20;
+	clone_vector[1].b = 21;
+	clone_vector[2].a = 30;
+	clone_vector[2].b = 31;
+
+	CHECK_EQUAL(2, icut->buffer_total_slots);
+	CHECK_EQUAL(0, icut->used_slots);
+	vector_add(&cut, (uint8_t *)&clone_vector[0]);
+	CHECK_EQUAL(1, icut->used_slots);
+	vector_add(&cut, (uint8_t *)&clone_vector[1]);
+	CHECK_EQUAL(2, icut->used_slots);
+	vector_add(&cut, (uint8_t *)&clone_vector[2]);
+	CHECK_EQUAL(3, icut->used_slots);
+	CHECK_EQUAL(4, icut->buffer_total_slots);
+
+	vector_remove_item(&cut, (uint8_t *)&clone_vector[1]);
+
+	CHECK_EQUAL(2, icut->used_slots);
+	CHECK_TRUE(memcmp(&clone_vector[0], vector_at(&cut, 0), sizeof(struct s_item)) == 0);
+	CHECK_TRUE(memcmp(&clone_vector[2], vector_at(&cut, 1), sizeof(struct s_item)) == 0);
+}
