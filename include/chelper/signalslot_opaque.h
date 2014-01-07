@@ -32,6 +32,7 @@ extern "C" {
 void signal_opaque_init(signal_opaque_t *);
 void signal_opaque_deinit(signal_opaque_t *);
 
+bool signal_opaque_is_connected(signal_opaque_t *, slot_opaque_t *);
 void signal_opaque_emit(signal_opaque_t *, void * ptr);
 
 void slot_opaque_init(slot_opaque_t *);
@@ -39,6 +40,7 @@ void slot_opaque_deinit(slot_opaque_t *);
 
 void slot_opaque_set(slot_opaque_t *, slot_opaque_func function, slot_arg arg);
 void slot_opaque_connect(slot_opaque_t *, signal_opaque_t *);
+void slot_opaque_disconnect(slot_opaque_t *, signal_opaque_t *);
 
 #ifdef __cplusplus
 }

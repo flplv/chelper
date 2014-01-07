@@ -34,7 +34,7 @@ void signal_func_decl(emit)(slot_func_args)
 
 }
 
-static bool signal_func_decl(is_connected)(signal_t *cobj, slot_t *slot)
+bool signal_func_decl(is_connected)(signal_t *cobj, slot_t *slot)
 {
 	uint32_t n_of_slots;
 	slot_t *slot_to_be_checked;
@@ -63,6 +63,14 @@ static void signal_func_decl(connect)(signal_t *cobj, slot_t *slot)
 		return;
 
 	vector_add(&obj->slots_vector, (BUFFER_PTR)&slot);
+}
+
+static void signal_func_decl(disconnect)(signal_t *cobj, slot_t *slot)
+{
+	struct s_signal_private * obj = (struct s_signal_private *) cobj;
+	PTR_CHECK(obj, signal_string);
+
+	vector_remove_item(&obj->slots_vector, (BUFFER_PTR)&slot);
 }
 
 void slot_func_decl(init)(slot_t * cobj)
@@ -98,6 +106,14 @@ void slot_func_decl(connect)(slot_t *cobj, signal_t* signal)
 	PTR_CHECK(obj, slot_string);
 
 	signal_func_decl(connect)(signal, cobj);
+}
+
+void slot_func_decl(disconnect)(slot_t *cobj, signal_t* signal)
+{
+	struct s_slot_private * obj = (struct s_slot_private *) cobj;
+	PTR_CHECK(obj, slot_string);
+
+	signal_func_decl(disconnect)(signal, cobj);
 }
 
 static void slot_func_decl(call)(slot_func_args)

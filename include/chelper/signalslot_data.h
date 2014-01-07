@@ -32,6 +32,7 @@ extern "C" {
 void signal_data_init(signal_data_t *);
 void signal_data_deinit(signal_data_t *);
 
+bool signal_data_is_connected(signal_data_t *, slot_data_t *);
 void signal_data_emit(signal_data_t *, void * data, size_t size);
 
 void slot_data_init(slot_data_t *);
@@ -39,6 +40,7 @@ void slot_data_deinit(slot_data_t *);
 
 void slot_data_set(slot_data_t *, slot_data_func function, slot_arg arg);
 void slot_data_connect(slot_data_t *, signal_data_t *);
+void slot_data_disconnect(slot_data_t *, signal_data_t *);
 
 #ifdef __cplusplus
 }
