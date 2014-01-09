@@ -25,8 +25,8 @@ endif
 chelpertest_SOURCES= test_main.cpp fast_ring_fifo_test.cpp log_test.cpp my_string_text.cpp ring_fifo_test.cpp signalslot_test.cpp timeout_test.cpp vector_test.cpp eventsystem_test.cpp 
 
 # Linker options for a.out
-chelpertest_LDFLAGS = -L$(top_builddir)/lib/.libs/ -lchelper -lCppUTest
-
+chelpertest_LDFLAGS = -L$(top_builddir)/lib/.libs/ -lchelper_test -lCppUTest
+ 
 # Compiler options for a.out
-chelpertest_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/lib -include CppUTest/MemoryLeakDetectorNewMacros.h -DSYSTEM_UNIT_TEST
+chelpertest_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/lib -include CppUTest/MemoryLeakDetectorMallocMacros.h -DSYSTEM_UNIT_TEST
 chelpertest_CXXFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/lib -include CppUTest/MemoryLeakDetectorNewMacros.h -DSYSTEM_UNIT_TEST

@@ -23,11 +23,8 @@
 #ifndef HELPER_TYPES_H_
 #define HELPER_TYPES_H_
 
-#if !defined SYSTEM_UNIT_TEST
-#include <malloc.h>
-#endif
-
 #include <stdint.h>
+#include <stddef.h>
 #include <stdbool.h>
 
 #ifndef false
