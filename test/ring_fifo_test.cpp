@@ -24,6 +24,7 @@
 #include "CppUTest/MemoryLeakDetector.h"
 
 extern "C" {
+#include <pthread.h>
 #include "chelper/ring_fifo.h"
 #include "ring_fifo.c"
 }
@@ -84,7 +85,7 @@ TEST(ring_fifo, add_peek_full_pop)
 	ring_fifo_deinit(&cut);
 }
 
-TEST(ring_fifo, nocopy)
+TEST(ring_fifo, nocopyfull)
 {
 	ring_fifo_t cut;
 	BUFFER_PTR pBuf;
@@ -92,18 +93,245 @@ TEST(ring_fifo, nocopy)
 	ring_fifo_init(&cut, 5, 3);
 
 	CHECK_TRUE(ring_fifo_is_empty(&cut));
+	CHECK_FALSE(ring_fifo_is_full(&cut));
 
 	pBuf = ring_fifo_zerocopy_push_start(&cut);
 	memcpy(pBuf, (void *)"ABCD", 5);
 	ring_fifo_zerocopy_push_finish(&cut);
 
+	CHECK_FALSE(ring_fifo_is_full(&cut));
+	CHECK_FALSE(ring_fifo_is_empty(&cut));
+
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	memcpy(pBuf, (void *)"ABCD", 5);
+	ring_fifo_zerocopy_push_finish(&cut);
+
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	memcpy(pBuf, (void *)"ABCD", 5);
+	ring_fifo_zerocopy_push_finish(&cut);
+
+	CHECK_TRUE(ring_fifo_is_full(&cut));
+
+	pBuf = ring_fifo_peek_at(&cut, 2);
+	STRCMP_EQUAL("ABCD", (const char *)pBuf);
+
+	ring_fifo_discard_last_push(&cut);
+
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	CHECK_TRUE(pBuf);
+	memcpy(pBuf, (void *)"CBDA", 5);
+	ring_fifo_zerocopy_push_finish(&cut);
+
+	pBuf = ring_fifo_peek_at(&cut, 2);
+	STRCMP_EQUAL("CBDA", (const char *)pBuf);
+
+	CHECK_TRUE(ring_fifo_is_full(&cut));
 	CHECK_FALSE(ring_fifo_is_empty(&cut));
 
 	pBuf = ring_fifo_zerocopy_pop_start(&cut);
 	STRCMP_EQUAL("ABCD", (const char *)pBuf);
 	ring_fifo_zerocopy_pop_finish(&cut);
 
+	CHECK_FALSE(ring_fifo_is_full(&cut));
+	CHECK_FALSE(ring_fifo_is_empty(&cut));
+
+	pBuf = ring_fifo_zerocopy_pop_start(&cut);
+	STRCMP_EQUAL("ABCD", (const char *)pBuf);
+	ring_fifo_zerocopy_pop_finish(&cut);
+
+	pBuf = ring_fifo_zerocopy_pop_start(&cut);
+	STRCMP_EQUAL("CBDA", (const char *)pBuf);
+	ring_fifo_zerocopy_pop_finish(&cut);
+
+	CHECK_FALSE(ring_fifo_is_full(&cut));
 	CHECK_TRUE(ring_fifo_is_empty(&cut));
+
+	ring_fifo_deinit(&cut);
+}
+
+
+TEST(ring_fifo, nocopymultiplepopstartandfinish)
+{
+	ring_fifo_t cut;
+	BUFFER_PTR pBuf;
+	int i, n;
+
+	ring_fifo_init(&cut, 4, 3);
+
+	n = 5;
+	while (n--)
+	{
+		if (ring_fifo_is_full(&cut))
+			ring_fifo_discard_last_push(&cut);
+
+		pBuf = ring_fifo_zerocopy_push_start(&cut);
+		memcpy(pBuf, (void *)&n, 4);
+		ring_fifo_zerocopy_push_finish(&cut);
+	}
+
+	i = *(uint32_t *)ring_fifo_peek_at(&cut, 0);
+	CHECK_EQUAL(4, i);
+
+	i = *(uint32_t *)ring_fifo_peek_at(&cut, 1);
+	CHECK_EQUAL(3, i);
+
+	i = *(uint32_t *)ring_fifo_peek_at(&cut, 2);
+	CHECK_EQUAL(0, i);
+
+
+	i = *(uint32_t *)ring_fifo_zerocopy_pop_start(&cut);
+	CHECK_EQUAL(4, i);
+	i = *(uint32_t *)ring_fifo_zerocopy_pop_start(&cut);
+	CHECK_EQUAL(4, i);
+	ring_fifo_zerocopy_pop_finish(&cut);
+	ring_fifo_zerocopy_pop_finish(&cut);
+	ring_fifo_zerocopy_pop_finish(&cut);
+
+	i = *(uint32_t *)ring_fifo_zerocopy_pop_start(&cut);
+	CHECK_EQUAL(3, i);
+	ring_fifo_zerocopy_pop_finish(&cut);
+
+	i = *(uint32_t *)ring_fifo_zerocopy_pop_start(&cut);
+	CHECK_EQUAL(0, i);
+	ring_fifo_zerocopy_pop_finish(&cut);
+
+	ring_fifo_deinit(&cut);
+}
+
+TEST(ring_fifo, nocopymultiplepushstartandfinish)
+{
+	ring_fifo_t cut;
+	BUFFER_PTR pBuf;
+	int i;
+
+	ring_fifo_init(&cut, 4, 3);
+
+	i = 4;
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	CHECK_TRUE(pBuf);
+	memcpy(pBuf, (void *)&i, 4);
+	ring_fifo_zerocopy_push_finish(&cut);
+
+	i = 5;
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	CHECK_TRUE(pBuf);
+	memcpy(pBuf, (void *)&i, 4);
+	i = 6;
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	CHECK_TRUE(pBuf);
+	memcpy(pBuf, (void *)&i, 4);
+	i = 7;
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	CHECK_TRUE(pBuf);
+	memcpy(pBuf, (void *)&i, 4);
+	ring_fifo_zerocopy_push_finish(&cut);
+	ring_fifo_zerocopy_push_finish(&cut);
+	ring_fifo_zerocopy_push_finish(&cut);
+	ring_fifo_zerocopy_push_finish(&cut);
+
+
+	i = 2;
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	CHECK_TRUE(pBuf);
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	CHECK_TRUE(pBuf);
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	CHECK_TRUE(pBuf);
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	CHECK_TRUE(pBuf);
+	memcpy(pBuf, (void *)&i, 4);
+
+	CHECK_FALSE(ring_fifo_is_full(&cut));
+
+	ring_fifo_zerocopy_push_finish(&cut);
+
+	CHECK_TRUE(ring_fifo_is_full(&cut));
+
+	ring_fifo_discard_last_push(&cut);
+
+	i = 3;
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	CHECK_TRUE(pBuf);
+	CHECK_FALSE(ring_fifo_is_full(&cut));
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	CHECK_TRUE(pBuf);
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	CHECK_TRUE(pBuf);
+	pBuf = ring_fifo_zerocopy_push_start(&cut);
+	CHECK_TRUE(pBuf);
+	memcpy(pBuf, (void *)&i, 4);
+	ring_fifo_zerocopy_push_finish(&cut);
+
+	CHECK_TRUE(ring_fifo_is_full(&cut));
+
+	i = *(uint32_t *)ring_fifo_zerocopy_pop_start(&cut);
+	CHECK_EQUAL(4, i);
+	ring_fifo_zerocopy_pop_finish(&cut);
+
+	i = *(uint32_t *)ring_fifo_zerocopy_pop_start(&cut);
+	CHECK_EQUAL(7, i);
+	ring_fifo_zerocopy_pop_finish(&cut);
+
+	i = *(uint32_t *)ring_fifo_zerocopy_pop_start(&cut);
+	CHECK_EQUAL(3, i);
+	ring_fifo_zerocopy_pop_finish(&cut);
+
+	ring_fifo_deinit(&cut);
+}
+
+void * thread_handler(void * arg)
+{
+	ring_fifo_t * cut = (ring_fifo_t *)arg;
+	BUFFER_PTR pBuf;
+
+	uint32_t n = 20;
+	while (n)
+	{
+		if (ring_fifo_is_full(cut)) {
+			pthread_yield();
+			continue;
+		}
+
+		n--;
+
+		pBuf = ring_fifo_zerocopy_push_start(cut);
+		CHECK_TRUE(pBuf);
+
+		*((uint32_t *)pBuf) = n;
+		ring_fifo_zerocopy_push_finish(cut);
+	}
+
+	pthread_exit(NULL);
+}
+
+
+TEST(ring_fifo, concurrence)
+{
+	ring_fifo_t cut;
+	BUFFER_PTR pBuf;
+
+	ring_fifo_init(&cut, 4, 1);
+
+	pthread_t thread;
+	pthread_create(&thread, NULL, (void *(*)(void *))thread_handler, &cut);
+
+	uint32_t n = 20;
+	while (n)
+	{
+		if (ring_fifo_is_empty(&cut)) {
+			pthread_yield();
+			continue;
+		}
+
+		n--;
+
+		pBuf = ring_fifo_zerocopy_pop_start(&cut);
+		CHECK_TRUE(pBuf);
+		CHECK_EQUAL(n, *((uint32_t *)pBuf));
+		ring_fifo_zerocopy_pop_finish(&cut);
+	}
+
+	pthread_join(thread, NULL);
 
 	ring_fifo_deinit(&cut);
 }

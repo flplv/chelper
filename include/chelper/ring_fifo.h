@@ -33,6 +33,7 @@ bool ring_fifo_is_full(ring_fifo_t *);
 bool ring_fifo_is_empty(ring_fifo_t *);
 
 BUFFER_PTR ring_fifo_peek(ring_fifo_t *);
+BUFFER_PTR ring_fifo_peek_at(ring_fifo_t * cobj, int pos);
 bool ring_fifo_pop(ring_fifo_t *, BUFFER_PTR to);
 bool ring_fifo_push(ring_fifo_t *, BUFFER_PTR_RDOLY copy_src);
 

@@ -25,14 +25,17 @@
 #include "chelper/checks.h"
 #include <string.h>
 
-static bool _full(struct s_ring_fifo_private * obj)
-{
-	return obj->full;
-}
-
 static bool _empty(struct s_ring_fifo_private * obj)
 {
-	return (obj->rd == obj->wr) && !obj->full;
+	return (obj->rd == obj->wr);
+}
+
+static bool _full(struct s_ring_fifo_private * obj)
+{
+	if (_empty(obj))
+		return false;
+
+	return ( (obj->rd)%obj->num_fifo_slots == (obj->wr+1)%obj->num_fifo_slots);
 }
 
 static BUFFER_PTR _rd_ptr(struct s_ring_fifo_private * obj)
@@ -47,12 +50,22 @@ static BUFFER_PTR _rd_ptr(struct s_ring_fifo_private * obj)
 	return obj->buffer + offset;
 }
 
+static bool _discard_last_wr(struct s_ring_fifo_private * obj)
+{
+	if (obj->nocp_push_started)
+		return false;
+
+	if (_empty(obj))
+		return false;
+
+	obj->wr--;
+
+	return true;
+}
+
 static BUFFER_PTR _wr_ptr(struct s_ring_fifo_private * obj)
 {
 	uint32_t offset;
-
-	if (_full(obj))
-		return NULL;
 
 	offset = (obj->wr % obj->num_fifo_slots) * obj->element_size;
 
@@ -64,6 +77,8 @@ void ring_fifo_init(ring_fifo_t * cobj, size_t element_size, int32_t num_of_elem
 	struct s_ring_fifo_private * obj = (struct s_ring_fifo_private *)cobj;
 	PTR_CHECK(obj, "ring_fifo");
 
+	num_of_elements++;
+
 	obj->client_buffer = NULL;
 	obj->own_buffer = (BUFFER_PTR)malloc(num_of_elements * element_size);
 	obj->buffer = obj->own_buffer;
@@ -71,7 +86,6 @@ void ring_fifo_init(ring_fifo_t * cobj, size_t element_size, int32_t num_of_elem
 	obj->num_fifo_slots = num_of_elements;
 	obj->rd = 0;
 	obj->wr = 0;
-	obj->full = false;
 	obj->nocp_pop_started = false;
 	obj->nocp_push_started = false;
 }
@@ -88,7 +102,6 @@ void ring_fifo_init_buffer(ring_fifo_t * cobj, BUFFER_PTR buffer, size_t buffer_
 	obj->num_fifo_slots = buffer_size / element_size;
 	obj->rd = 0;
 	obj->wr = 0;
-	obj->full = true;
 	obj->nocp_pop_started = false;
 	obj->nocp_push_started = false;
 }
@@ -123,6 +136,14 @@ bool ring_fifo_is_empty(ring_fifo_t *cobj)
 	return _empty(obj);
 }
 
+uint32_t ring_fifo_count(ring_fifo_t *cobj)
+{
+	struct s_ring_fifo_private * obj = (struct s_ring_fifo_private *)cobj;
+	PTR_CHECK_RETURN(obj, "ring_fifo", false);
+
+	return obj->wr - obj->rd;
+}
+
 
 BUFFER_PTR ring_fifo_peek(ring_fifo_t *cobj)
 {
@@ -145,9 +166,6 @@ bool ring_fifo_pop(ring_fifo_t *cobj, BUFFER_PTR to)
 
 	obj->rd++;
 
-	if (obj->rd == obj->wr)
-		obj->full = false;
-
 	return true;
 }
 
@@ -166,10 +184,15 @@ bool ring_fifo_push(ring_fifo_t *cobj, BUFFER_PTR_RDOLY copy_src)
 
 	obj->wr++;
 
-	if (obj->wr%obj->num_fifo_slots == obj->rd%obj->num_fifo_slots)
-		obj->full = true;
-
 	return true;
+}
+
+bool ring_fifo_discard_last_push(ring_fifo_t *cobj)
+{
+	struct s_ring_fifo_private * obj = (struct s_ring_fifo_private *)cobj;
+	PTR_CHECK_RETURN(obj, "ring_fifo", false);
+
+	return _discard_last_wr(obj);
 }
 
 
@@ -196,9 +219,6 @@ void ring_fifo_zerocopy_pop_finish(ring_fifo_t * cobj)
 
 	obj->rd++;
 
-	if (obj->rd == obj->wr)
-		obj->full = false;
-
 	obj->nocp_pop_started = false;
 }
 
@@ -224,9 +244,30 @@ void ring_fifo_zerocopy_push_finish(ring_fifo_t * cobj)
 		return;
 
 	obj->wr++;
-
-	if (obj->wr%obj->num_fifo_slots == obj->rd%obj->num_fifo_slots)
-		obj->full = true;
-
 	obj->nocp_push_started = false;
+}
+
+BUFFER_PTR ring_fifo_buffer_start(ring_fifo_t * cobj)
+{
+	struct s_ring_fifo_private * obj = (struct s_ring_fifo_private *)cobj;
+	PTR_CHECK_RETURN(obj, "ring_fifo", NULL);
+
+	return (obj->buffer);
+}
+
+BUFFER_PTR ring_fifo_peek_at(ring_fifo_t * cobj, int pos)
+{
+	uint32_t offset;
+	struct s_ring_fifo_private * obj = (struct s_ring_fifo_private *)cobj;
+	PTR_CHECK_RETURN(obj, "ring_fifo", NULL);
+
+	if (pos < 0)
+		return NULL;
+
+	if ((unsigned)pos >= obj->num_fifo_slots)
+		return NULL;
+
+	offset = (pos % obj->num_fifo_slots) * obj->element_size;
+
+	return obj->buffer + offset;
 }

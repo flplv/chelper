@@ -3,7 +3,9 @@
 # The 'lib_' indicates that these build products will be installed
 # in the $(libdir) directory. For example /usr/lib
 lib_LTLIBRARIES = libchelper.la
+if COND_HAVE_CPPUTEST
 noinst_LTLIBRARIES = libchelper_test.la
+endif
 
 #######################################
 # Build information for each library
