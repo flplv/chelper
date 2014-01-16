@@ -284,7 +284,7 @@ void * thread_handler(void * arg)
 	ring_fifo_t * cut = (ring_fifo_t *)arg;
 	BUFFER_PTR pBuf;
 
-	uint32_t n = 20;
+	uint32_t n = 0x100;
 	while (n)
 	{
 		if (ring_fifo_is_full(cut)) {
@@ -315,10 +315,15 @@ TEST(ring_fifo, concurrence)
 	pthread_t thread;
 	pthread_create(&thread, NULL, (void *(*)(void *))thread_handler, &cut);
 
-	uint32_t n = 20;
+	struct s_ring_fifo_private * icut = (struct s_ring_fifo_private *)&cut;
+	icut->rd = 0xFFFFFF0; //Wrap around test
+	icut->wr = 0xFFFFFF0;
+
+	uint32_t n = 0x100;
 	while (n)
 	{
-		if (ring_fifo_is_empty(&cut)) {
+		if (ring_fifo_is_empty(&cut))
+		{
 			pthread_yield();
 			continue;
 		}

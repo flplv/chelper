@@ -1,3 +1,5 @@
+include  $(top_srcdir)/PreRules.am
+
 #######################################
 # The list of libraries we are building seperated by spaces.
 # The 'lib_' indicates that these build products will be installed
@@ -20,4 +22,4 @@ libchelper_la_LDFLAGS =
 # Compiler options. Here we are adding the include directory
 # to be searched for headers included in the source code.
 libchelper_la_CPPFLAGS = -I$(top_srcdir)/include -include malloc.h
-libchelper_test_la_CPPFLAGS = -I$(top_srcdir)/include -include CppUTest/MemoryLeakDetectorMallocMacros.h -DSYSTEM_UNIT_TEST
+libchelper_test_la_CPPFLAGS = -I$(top_srcdir)/include -include CppUTest/MemoryLeakDetectorMallocMacros.h -DSYSTEM_UNIT_TEST 

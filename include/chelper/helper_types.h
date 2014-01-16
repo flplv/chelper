@@ -54,6 +54,21 @@ struct s_vector_private
 };
 typedef uint8_t vector_t[sizeof(struct s_vector_private)];
 
+struct s_double_buffer_private
+{
+	uint8_t * client_buffer;
+	uint8_t * own_buffer;
+	uint8_t * buffer;
+	size_t buffer_size;
+	size_t element_size;
+	bool fst_empty;
+	bool sec_empty;
+	bool nocp_pop_started;
+	bool nocp_push_started;
+	uint8_t last_written;
+};
+typedef uint8_t double_buffer_t[sizeof(struct s_double_buffer_private)];
+
 struct s_ring_fifo_private
 {
 	uint8_t * client_buffer;
@@ -62,7 +77,6 @@ struct s_ring_fifo_private
 	size_t buffer_size;
 	size_t element_size;
 	uint32_t num_fifo_slots;
-	bool full;
 	uint32_t rd;
 	uint32_t wr;
 	bool nocp_pop_started;

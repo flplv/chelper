@@ -2,6 +2,7 @@
 #include "chelper/module_macros.h"
 #include "chelper/checks.h"
 #include "chelper/signalslot_opaque.h"
+#include "chelper/ring_fifo.h"
 
 #define MODULE_NAME "event_handler"
 
@@ -98,7 +99,7 @@ bool event_loop_has_pending_events(event_loop_t * cobj)
 	obj_decl(struct s_event_loop_private, cobj);
 	PTR_CHECK_RETURN(obj, MODULE_NAME, false);
 
-	if (ring_fifo_is_empty(obj->queue))
+	if (ring_fifo_is_empty(&obj->queue))
 		return false;
 
 	return true;

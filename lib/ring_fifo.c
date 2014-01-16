@@ -35,7 +35,7 @@ static bool _full(struct s_ring_fifo_private * obj)
 	if (_empty(obj))
 		return false;
 
-	return ( (obj->rd)%obj->num_fifo_slots == (obj->wr+1)%obj->num_fifo_slots);
+	return ( ((obj->wr - obj->rd) >= obj->num_fifo_slots) ? true : false);
 }
 
 static BUFFER_PTR _rd_ptr(struct s_ring_fifo_private * obj)
@@ -72,34 +72,39 @@ static BUFFER_PTR _wr_ptr(struct s_ring_fifo_private * obj)
 	return obj->buffer + offset;
 }
 
+#ifdef CHELPER_ALLOW_MALLOC
 void ring_fifo_init(ring_fifo_t * cobj, size_t element_size, int32_t num_of_elements)
 {
 	struct s_ring_fifo_private * obj = (struct s_ring_fifo_private *)cobj;
 	PTR_CHECK(obj, "ring_fifo");
 
-	num_of_elements++;
-
+	obj->own_buffer = (BUFFER_PTR)malloc(element_size * num_of_elements);
+	obj->num_fifo_slots = num_of_elements;
 	obj->client_buffer = NULL;
-	obj->own_buffer = (BUFFER_PTR)malloc(num_of_elements * element_size);
 	obj->buffer = obj->own_buffer;
 	obj->element_size = element_size;
-	obj->num_fifo_slots = num_of_elements;
 	obj->rd = 0;
 	obj->wr = 0;
 	obj->nocp_pop_started = false;
 	obj->nocp_push_started = false;
+
 }
+#endif
 
 void ring_fifo_init_buffer(ring_fifo_t * cobj, BUFFER_PTR buffer, size_t buffer_size, size_t element_size)
 {
+	size_t num_of_elements;
 	struct s_ring_fifo_private * obj = (struct s_ring_fifo_private *)cobj;
 	PTR_CHECK(obj, "ring_fifo");
+
+	num_of_elements = buffer_size / element_size;
+
+	obj->num_fifo_slots = num_of_elements;
 
 	obj->own_buffer = NULL;
 	obj->client_buffer = buffer;
 	obj->buffer = obj->client_buffer;
 	obj->element_size = element_size;
-	obj->num_fifo_slots = buffer_size / element_size;
 	obj->rd = 0;
 	obj->wr = 0;
 	obj->nocp_pop_started = false;
@@ -114,10 +119,12 @@ void ring_fifo_deinit(ring_fifo_t *cobj)
 	obj->buffer = NULL;
 	obj->client_buffer = NULL;
 
+#ifdef CHELPER_ALLOW_MALLOC
 	if (obj->own_buffer) {
 		free (obj->own_buffer);
 		obj->own_buffer = NULL;
 	}
+#endif
 }
 
 bool ring_fifo_is_full(ring_fifo_t *cobj)

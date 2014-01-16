@@ -102,7 +102,7 @@ TEST(log, no_info)
 	STRCMP_CONTAINS("Testando a macro MSG_ERROR", sys_get_intercepted_message());
 }
 
-TEST(log, no_debug)
+IGNORE_TEST(log, no_debug)
 {
 	MSG_ERROR("Testando a macro MSG_ERROR","");
 	set_sys_dbg_lvl(WARNING);

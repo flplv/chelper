@@ -10,7 +10,7 @@ include  $(top_srcdir)/PreRules.am
 # The 'noinst_' prefix indicates that the following targets are not to be
 # installed.
 if COND_HAVE_CPPUTEST
-    noinst_PROGRAMS=chelpertest
+    noinst_PROGRAMS=chelpertest 
 else
     noinst_PROGRAMS=
 endif
@@ -28,5 +28,5 @@ chelpertest_SOURCES= test_main.cpp fast_ring_fifo_test.cpp log_test.cpp my_strin
 chelpertest_LDFLAGS = -L$(top_builddir)/lib/.libs/ -lchelper_test -lCppUTest -lpthread
  
 # Compiler options for a.out
-chelpertest_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/lib -include CppUTest/MemoryLeakDetectorMallocMacros.h -DSYSTEM_UNIT_TEST
-chelpertest_CXXFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/lib -include CppUTest/MemoryLeakDetectorNewMacros.h -DSYSTEM_UNIT_TEST
+chelpertest_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/lib -include CppUTest/MemoryLeakDetectorMallocMacros.h -DSYSTEM_UNIT_TEST -DCHELPER_ALLOW_MALLOC
+chelpertest_CXXFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/lib -include CppUTest/MemoryLeakDetectorNewMacros.h -DSYSTEM_UNIT_TEST -DCHELPER_ALLOW_MALLOC
