@@ -16,7 +16,7 @@ void signal_func_decl(deinit)(signal_t * cobj)
 	vector_deinit(&obj->slots_vector);
 }
 
-void signal_func_decl(emit)(slot_func_args)
+void signal_func_decl(emit)(signal_func_args)
 {
 	uint32_t n_of_slots;
 	slot_t *slot_to_be_called = NULL;

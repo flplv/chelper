@@ -87,7 +87,7 @@ TEST(vector, instance)
 TEST(vector, addmany_remove)
 {
 	vector_t vec;
-	struct s_vector_private * ivec = ((struct s_vector_private *)vec);
+	struct s_vector_private * ivec = ((struct s_vector_private *)&vec);
 
 	vector_init(&vec, sizeof(char));
 
@@ -137,6 +137,6 @@ TEST(vector, addthreeremoveitem)
 	vector_remove_item(&cut, (uint8_t *)&clone_vector[1]);
 
 	CHECK_EQUAL(2, icut->used_slots);
-	CHECK_TRUE(memcmp(&clone_vector[0], vector_at(&cut, 0), sizeof(struct s_item)) == 0);
-	CHECK_TRUE(memcmp(&clone_vector[2], vector_at(&cut, 1), sizeof(struct s_item)) == 0);
+	CHECK_TRUE((bool)(memcmp(&clone_vector[0], vector_at(&cut, 0), sizeof(struct s_item)) == 0));
+	CHECK_TRUE((bool)(memcmp(&clone_vector[2], vector_at(&cut, 1), sizeof(struct s_item)) == 0));
 }

@@ -3,4 +3,6 @@ include  $(top_srcdir)/PreRules.am
 SUBDIRS= lib include test
 
 unit-tests: all
-	./$(top_builddir)/test/chelpertest
+	./$(top_builddir)/test/chelpertest -v
+
+.PHONY: unit-tests

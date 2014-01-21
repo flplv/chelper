@@ -30,7 +30,7 @@
 
 void my_string_init(my_string_t * cobj)
 {
-	struct s_my_string* obj = (struct s_my_string *)cobj;
+	struct s_my_string_private* obj = (struct s_my_string_private *)cobj;
 	PTR_CHECK(obj, "my_string");
 
 	vector_init(&obj->str_data, sizeof(char));
@@ -39,7 +39,7 @@ void my_string_init(my_string_t * cobj)
 
 void my_string_deinit(my_string_t *cobj)
 {
-	struct s_my_string* obj = (struct s_my_string *)cobj;
+	struct s_my_string_private* obj = (struct s_my_string_private *)cobj;
 	PTR_CHECK(obj, "my_string");
 
 	signal_deinit(&obj->update_signal);
@@ -48,7 +48,7 @@ void my_string_deinit(my_string_t *cobj)
 
 void my_string_clear(my_string_t * cobj)
 {
-	struct s_my_string* obj = (struct s_my_string *)cobj;
+	struct s_my_string_private* obj = (struct s_my_string_private *)cobj;
 	PTR_CHECK(obj, "my_string");
 
 	vector_clear(&obj->str_data);
@@ -58,7 +58,7 @@ void my_string_set(my_string_t *cobj, const char* str)
 {
 	size_t len;
 
-	struct s_my_string* obj = (struct s_my_string *)cobj;
+	struct s_my_string_private* obj = (struct s_my_string_private *)cobj;
 	PTR_CHECK(obj, "my_string");
 
 	len = my_strlen(str);
@@ -71,7 +71,7 @@ void my_string_set(my_string_t *cobj, const char* str)
 
 const char* my_string_data(my_string_t* cobj)
 {
-	struct s_my_string* obj = (struct s_my_string *)cobj;
+	struct s_my_string_private* obj = (struct s_my_string_private *)cobj;
 	PTR_CHECK_RETURN(obj, "my_string", NULL);
 
 	return (const char *)vector_data(&obj->str_data);
@@ -79,7 +79,7 @@ const char* my_string_data(my_string_t* cobj)
 
 size_t my_string_len(my_string_t* cobj)
 {
-	struct s_my_string* obj = (struct s_my_string *)cobj;
+	struct s_my_string_private* obj = (struct s_my_string_private *)cobj;
 	PTR_CHECK_RETURN(obj, "my_string", 0);
 
 	return vector_size(&obj->str_data) - 1;
@@ -87,7 +87,7 @@ size_t my_string_len(my_string_t* cobj)
 
 signal_t * my_string_update_signal(my_string_t * cobj)
 {
-	struct s_my_string* obj = (struct s_my_string *)cobj;
+	struct s_my_string_private* obj = (struct s_my_string_private *)cobj;
 	PTR_CHECK_RETURN(obj, "my_string", NULL);
 
 	return &obj->update_signal;

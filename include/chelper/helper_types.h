@@ -43,100 +43,34 @@ typedef unsigned int size_t;
 #define BUFFER_PTR_RDOLY const uint8_t *
 #define BUFFER_PTR uint8_t *
 
-typedef uint32_t timeout_t;
-
-struct s_vector_private
-{
-	size_t item_size;
-	uint32_t used_slots;
-	uint32_t buffer_total_slots;
-	uint8_t * buffer;
-};
-typedef uint8_t vector_t[sizeof(struct s_vector_private)];
-
-struct s_double_buffer_private
-{
-	uint8_t * client_buffer;
-	uint8_t * own_buffer;
-	uint8_t * buffer;
-	size_t buffer_size;
-	size_t element_size;
-	bool fst_empty;
-	bool sec_empty;
-	bool nocp_pop_started;
-	bool nocp_push_started;
-	uint8_t last_written;
-};
-typedef uint8_t double_buffer_t[sizeof(struct s_double_buffer_private)];
-
-struct s_ring_fifo_private
-{
-	uint8_t * client_buffer;
-	uint8_t * own_buffer;
-	uint8_t * buffer;
-	size_t buffer_size;
-	size_t element_size;
-	uint32_t num_fifo_slots;
-	uint32_t rd;
-	uint32_t wr;
-	bool nocp_pop_started;
-	bool nocp_push_started;
-};
-typedef uint8_t ring_fifo_t[sizeof(struct s_ring_fifo_private)];
-
 typedef void * slot_arg;
 typedef void(*slot_func)(slot_arg);
 typedef void(*slot2_func)(slot_arg, size_t, size_t);
 typedef void(*slot_data_func)(slot_arg, void *, size_t);
 typedef void(*slot_opaque_func)(slot_arg, void *);
 
-struct s_signal_private
-{
-	vector_t slots_vector;
-};
-typedef uint8_t signal_t[sizeof(struct s_signal_private)];
-typedef uint8_t signal2_t[sizeof(struct s_signal_private)];
-typedef uint8_t signal_data_t[sizeof(struct s_signal_private)];
-typedef uint8_t signal_opaque_t[sizeof(struct s_signal_private)];
+#include "private_helper_types.h"
 
-struct s_slot_private
-{
-	slot_func func;
-	slot_arg arg0;
-	bool set;
-};
-typedef uint8_t slot_t[sizeof(struct s_slot_private)];
+typedef uint32_t timeout_t;
 
-struct s_slot2_private
-{
-	slot2_func func;
-	slot_arg arg0;
-	bool set;
-};
-typedef uint8_t slot2_t[sizeof(struct s_slot2_private)];
+typedef struct s_vector_private vector_t;
 
-struct s_slot_data_private
-{
-	slot_data_func func;
-	slot_arg arg0;
-	bool set;
-};
-typedef uint8_t slot_data_t[sizeof(struct s_slot_data_private)];
+typedef struct s_ring_fifo_private ring_fifo_t;
 
-struct s_slot_opaque_private
-{
-	slot_opaque_func func;
-	slot_arg arg0;
-	bool set;
-};
-typedef uint8_t slot_opaque_t[sizeof(struct s_slot_opaque_private)];
+typedef struct s_signal_private signal_t;
+typedef struct s_signal_private signal2_t;
+typedef struct s_signal_private signal_data_t;
+typedef struct s_signal_private signal_opaque_t;
 
-struct s_my_string
-{
-	vector_t str_data;
-	signal_t update_signal;
-};
-typedef uint8_t my_string_t[sizeof(struct s_my_string)];
+typedef struct s_slot_private slot_t;
+
+typedef struct s_slot2_private slot2_t;
+
+typedef struct s_slot_data_private slot_data_t;
+
+typedef struct s_slot_opaque_private slot_opaque_t;
+
+typedef struct s_my_string_private my_string_t;
 
 
 #endif /* HELPER_TYPES_H_ */
